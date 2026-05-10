@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Star, Phone, MapPin, Globe, Mail, Plus, ShoppingBag } from "lucide-react";
+import { Star, Phone, MapPin, Globe, Mail, Plus, ShoppingBag, BedDouble, CalendarCheck } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { cart } from "@/lib/cart-store";
 import { toast } from "sonner";
+import { ReservationDialog } from "@/components/reservation-dialog";
 
 export const Route = createFileRoute("/places/$id")({ component: PlacePage });
 
