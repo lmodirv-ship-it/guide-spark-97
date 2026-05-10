@@ -16,7 +16,7 @@ function Requests() {
 
   const load = async () => {
     let q = supabase.from("places")
-      .select("id, name, cover_image, phone, status, created_at, source, categories(name_ar), cities(name_ar)")
+      .select("id, public_id, name, cover_image, phone, status, created_at, source, categories(name_ar), cities(name_ar)")
       .order("created_at", { ascending: false }).limit(50);
     if (tab === "pending") q = q.in("status", ["pending", "pending_review", "draft"] as any);
     const { data } = await q;
