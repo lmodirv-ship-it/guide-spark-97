@@ -118,6 +118,7 @@ export function InlineCheckout({ placeId }: { placeId: string }) {
   return (
     <section className="mt-10 mb-16 rounded-2xl border bg-card shadow-card overflow-hidden">
       {/* Cart panel */}
+      {step !== "tracking" && (
       <div className="p-5 md:p-6">
         <div className="flex items-center gap-2 mb-4">
           <ShoppingCart className="h-5 w-5 text-primary" />
@@ -155,6 +156,7 @@ export function InlineCheckout({ placeId }: { placeId: string }) {
           </Button>
         )}
       </div>
+      )}
 
       {/* Register panel (inline) */}
       {step === "register" && !authed && (
