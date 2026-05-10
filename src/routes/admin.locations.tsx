@@ -45,7 +45,7 @@ function CountriesTab() {
     const slug = form.name_en?.toLowerCase().replace(/\s+/g, "-") || form.code.toLowerCase();
     const { error } = await supabase.from("countries").insert({ ...form, slug });
     if (error) return toast.error(error.message);
-    toast.success("تمت الإضافة"); setForm({ code: "", name_ar: "", name_fr: "", name_en: "", flag_emoji: "", currency: "", phone_code: "" }); load();
+    toast.success("تمت الإضافة"); setForm({ code: "", name_ar: "", name_fr: "", name_en: "", flag_emoji: "", currency: "", phone_code: "", languages: "" }); load();
   };
 
   const toggle = async (r: any) => {
