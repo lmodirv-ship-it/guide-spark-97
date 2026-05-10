@@ -22,22 +22,16 @@ function Home() {
   const { t, i18n } = useTranslation();
   const [cats, setCats] = useState<CategoryItem[]>([]);
   const [cities, setCities] = useState<{ id: string; name: string }[]>([]);
-  const [places, setPlaces] = useState<PlaceCardData[]>([]);
+  const [places] = useState(() => HN_RESTAURANTS);
 
   useEffect(() => {
     const lang = i18n.language;
     const nameCol = lang === "fr" ? "name_fr" : lang === "en" ? "name_en" : "name_ar";
 
     (async () => {
-      const [catsRes, citiesRes, placesRes, countsRes] = await Promise.all([
+      const [catsRes, citiesRes, countsRes] = await Promise.all([
         supabase.from("categories").select(`id, slug, icon, color, ${nameCol}`).is("parent_id", null).order("sort_order"),
         supabase.from("cities").select(`id, ${nameCol}`).order(nameCol),
-        supabase
-          .from("places")
-          .select(`id, name, description, cover_image, address, phone, rating_avg, rating_count, is_open, category:categories(name_ar, name_fr, name_en, color, slug)`)
-          .eq("status", "active")
-          .order("rating_avg", { ascending: false })
-          .limit(8),
         supabase.from("places").select("category_id", { count: "exact", head: false }).eq("status", "active"),
       ]);
 
@@ -51,7 +45,6 @@ function Home() {
         })),
       );
       setCities((citiesRes.data ?? []).map((c: any) => ({ id: c.id, name: c[nameCol] })));
-      setPlaces((placesRes.data ?? []) as any);
     })();
   }, [i18n.language]);
 
