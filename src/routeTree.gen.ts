@@ -18,10 +18,18 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as PlacesIdRouteImport } from './routes/places.$id'
 import { Route as CategoriesSlugRouteImport } from './routes/categories.$slug'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminReviewsRouteImport } from './routes/admin.reviews'
+import { Route as AdminRequestsRouteImport } from './routes/admin.requests'
+import { Route as AdminReportsRouteImport } from './routes/admin.reports'
 import { Route as AdminProductsRouteImport } from './routes/admin.products'
 import { Route as AdminPlacesRouteImport } from './routes/admin.places'
 import { Route as AdminLocationsRouteImport } from './routes/admin.locations'
+import { Route as AdminImportRouteImport } from './routes/admin.import'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
+import { Route as AdminAdsRouteImport } from './routes/admin.ads'
+import { Route as AdminActivityRouteImport } from './routes/admin.activity'
 import { Route as AdminPlacesNewRouteImport } from './routes/admin.places.new'
 
 const SearchRoute = SearchRouteImport.update({
@@ -69,6 +77,31 @@ const CategoriesSlugRoute = CategoriesSlugRouteImport.update({
   path: '/categories/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReviewsRoute = AdminReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminRequestsRoute = AdminRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReportsRoute = AdminReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminProductsRoute = AdminProductsRouteImport.update({
   id: '/products',
   path: '/products',
@@ -84,9 +117,24 @@ const AdminLocationsRoute = AdminLocationsRouteImport.update({
   path: '/locations',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminImportRoute = AdminImportRouteImport.update({
+  id: '/import',
+  path: '/import',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
   id: '/categories',
   path: '/categories',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdsRoute = AdminAdsRouteImport.update({
+  id: '/ads',
+  path: '/ads',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminActivityRoute = AdminActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminPlacesNewRoute = AdminPlacesNewRouteImport.update({
@@ -102,10 +150,18 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/favorites': typeof FavoritesRoute
   '/search': typeof SearchRoute
+  '/admin/activity': typeof AdminActivityRoute
+  '/admin/ads': typeof AdminAdsRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/import': typeof AdminImportRoute
   '/admin/locations': typeof AdminLocationsRoute
   '/admin/places': typeof AdminPlacesRouteWithChildren
   '/admin/products': typeof AdminProductsRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/requests': typeof AdminRequestsRoute
+  '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/places/$id': typeof PlacesIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -117,10 +173,18 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/favorites': typeof FavoritesRoute
   '/search': typeof SearchRoute
+  '/admin/activity': typeof AdminActivityRoute
+  '/admin/ads': typeof AdminAdsRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/import': typeof AdminImportRoute
   '/admin/locations': typeof AdminLocationsRoute
   '/admin/places': typeof AdminPlacesRouteWithChildren
   '/admin/products': typeof AdminProductsRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/requests': typeof AdminRequestsRoute
+  '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/places/$id': typeof PlacesIdRoute
   '/admin': typeof AdminIndexRoute
@@ -134,10 +198,18 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/favorites': typeof FavoritesRoute
   '/search': typeof SearchRoute
+  '/admin/activity': typeof AdminActivityRoute
+  '/admin/ads': typeof AdminAdsRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/import': typeof AdminImportRoute
   '/admin/locations': typeof AdminLocationsRoute
   '/admin/places': typeof AdminPlacesRouteWithChildren
   '/admin/products': typeof AdminProductsRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/requests': typeof AdminRequestsRoute
+  '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/places/$id': typeof PlacesIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -152,10 +224,18 @@ export interface FileRouteTypes {
     | '/auth'
     | '/favorites'
     | '/search'
+    | '/admin/activity'
+    | '/admin/ads'
     | '/admin/categories'
+    | '/admin/import'
     | '/admin/locations'
     | '/admin/places'
     | '/admin/products'
+    | '/admin/reports'
+    | '/admin/requests'
+    | '/admin/reviews'
+    | '/admin/settings'
+    | '/admin/users'
     | '/categories/$slug'
     | '/places/$id'
     | '/admin/'
@@ -167,10 +247,18 @@ export interface FileRouteTypes {
     | '/auth'
     | '/favorites'
     | '/search'
+    | '/admin/activity'
+    | '/admin/ads'
     | '/admin/categories'
+    | '/admin/import'
     | '/admin/locations'
     | '/admin/places'
     | '/admin/products'
+    | '/admin/reports'
+    | '/admin/requests'
+    | '/admin/reviews'
+    | '/admin/settings'
+    | '/admin/users'
     | '/categories/$slug'
     | '/places/$id'
     | '/admin'
@@ -183,10 +271,18 @@ export interface FileRouteTypes {
     | '/auth'
     | '/favorites'
     | '/search'
+    | '/admin/activity'
+    | '/admin/ads'
     | '/admin/categories'
+    | '/admin/import'
     | '/admin/locations'
     | '/admin/places'
     | '/admin/products'
+    | '/admin/reports'
+    | '/admin/requests'
+    | '/admin/reviews'
+    | '/admin/settings'
+    | '/admin/users'
     | '/categories/$slug'
     | '/places/$id'
     | '/admin/'
@@ -269,6 +365,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoriesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reviews': {
+      id: '/admin/reviews'
+      path: '/reviews'
+      fullPath: '/admin/reviews'
+      preLoaderRoute: typeof AdminReviewsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/requests': {
+      id: '/admin/requests'
+      path: '/requests'
+      fullPath: '/admin/requests'
+      preLoaderRoute: typeof AdminRequestsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reports': {
+      id: '/admin/reports'
+      path: '/reports'
+      fullPath: '/admin/reports'
+      preLoaderRoute: typeof AdminReportsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/products': {
       id: '/admin/products'
       path: '/products'
@@ -290,11 +421,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLocationsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/import': {
+      id: '/admin/import'
+      path: '/import'
+      fullPath: '/admin/import'
+      preLoaderRoute: typeof AdminImportRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/categories': {
       id: '/admin/categories'
       path: '/categories'
       fullPath: '/admin/categories'
       preLoaderRoute: typeof AdminCategoriesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/ads': {
+      id: '/admin/ads'
+      path: '/ads'
+      fullPath: '/admin/ads'
+      preLoaderRoute: typeof AdminAdsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/activity': {
+      id: '/admin/activity'
+      path: '/activity'
+      fullPath: '/admin/activity'
+      preLoaderRoute: typeof AdminActivityRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/places/new': {
@@ -320,18 +472,34 @@ const AdminPlacesRouteWithChildren = AdminPlacesRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminActivityRoute: typeof AdminActivityRoute
+  AdminAdsRoute: typeof AdminAdsRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
+  AdminImportRoute: typeof AdminImportRoute
   AdminLocationsRoute: typeof AdminLocationsRoute
   AdminPlacesRoute: typeof AdminPlacesRouteWithChildren
   AdminProductsRoute: typeof AdminProductsRoute
+  AdminReportsRoute: typeof AdminReportsRoute
+  AdminRequestsRoute: typeof AdminRequestsRoute
+  AdminReviewsRoute: typeof AdminReviewsRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminActivityRoute: AdminActivityRoute,
+  AdminAdsRoute: AdminAdsRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
+  AdminImportRoute: AdminImportRoute,
   AdminLocationsRoute: AdminLocationsRoute,
   AdminPlacesRoute: AdminPlacesRouteWithChildren,
   AdminProductsRoute: AdminProductsRoute,
+  AdminReportsRoute: AdminReportsRoute,
+  AdminRequestsRoute: AdminRequestsRoute,
+  AdminReviewsRoute: AdminReviewsRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
