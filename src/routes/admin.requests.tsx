@@ -34,6 +34,7 @@ function Requests() {
   return (
     <>
       <AdminTopbar title="طلبات الإضافة" subtitle="مراجعة الأماكن المرسلة من المستخدمين" />
+      <AutoSearchPanel kind="places" title="توليد أماكن جديدة (مسودة للمراجعة)" hint="اكتب نوع المكان والمدينة (مثلاً: مقاهي في الرباط)." onSaved={load} />
       <div className="flex gap-2 mb-4">
         <Button variant={tab === "pending" ? "default" : "outline"} size="sm" onClick={() => setTab("pending")}>
           <Inbox className="h-4 w-4 me-1" /> قيد الانتظار

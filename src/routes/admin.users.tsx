@@ -34,6 +34,7 @@ function Users() {
   return (
     <>
       <AdminTopbar title="المستخدمون والأدوار" subtitle={`${rows.length} مستخدم`} />
+      <AutoSearchPanel kind="users" title="اقتراح مستخدمين (معاينة فقط)" hint="معاينة قائمة مستخدمين مقترحين — لا يمكن إنشاء حسابات تلقائياً." />
       <div className="rounded-2xl border bg-card shadow-card">
         <div className="p-4 border-b">
           <div className="relative max-w-md">
