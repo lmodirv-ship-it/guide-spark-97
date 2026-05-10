@@ -48,7 +48,7 @@ function AuthPage() {
         if (error) throw error;
         toast.success("تم تسجيل الدخول");
         try {
-          if (remember) localStorage.setItem(REMEMBER_KEY, JSON.stringify({ email, password }));
+          if (remember) localStorage.setItem(REMEMBER_KEY, JSON.stringify({ email }));
           else localStorage.removeItem(REMEMBER_KEY);
         } catch {}
         const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", data.user!.id);
