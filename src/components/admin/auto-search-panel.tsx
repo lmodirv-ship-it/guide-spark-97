@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { runAutoSearch } from "@/lib/auto-search.functions";
+import { adminCreateUsers } from "@/lib/admin-create-users.functions";
 
 type Kind = "places" | "cities" | "countries" | "categories" | "products" | "ads" | "users" | "reviews";
 
