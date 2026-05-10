@@ -71,6 +71,7 @@ export type Database = {
           name_ar: string
           name_en: string
           name_fr: string
+          slug: string
         }
         Insert: {
           country_id: string
@@ -81,6 +82,7 @@ export type Database = {
           name_ar: string
           name_en: string
           name_fr: string
+          slug: string
         }
         Update: {
           country_id?: string
@@ -91,6 +93,7 @@ export type Database = {
           name_ar?: string
           name_en?: string
           name_fr?: string
+          slug?: string
         }
         Relationships: [
           {
@@ -111,6 +114,7 @@ export type Database = {
           name_ar: string
           name_en: string
           name_fr: string
+          slug: string
         }
         Insert: {
           code: string
@@ -120,6 +124,7 @@ export type Database = {
           name_ar: string
           name_en: string
           name_fr: string
+          slug: string
         }
         Update: {
           code?: string
@@ -129,6 +134,7 @@ export type Database = {
           name_ar?: string
           name_en?: string
           name_fr?: string
+          slug?: string
         }
         Relationships: []
       }
@@ -246,6 +252,7 @@ export type Database = {
           phone: string | null
           rating_avg: number | null
           rating_count: number
+          slug: string
           status: Database["public"]["Enums"]["place_status"]
           updated_at: string
           website: string | null
@@ -269,6 +276,7 @@ export type Database = {
           phone?: string | null
           rating_avg?: number | null
           rating_count?: number
+          slug: string
           status?: Database["public"]["Enums"]["place_status"]
           updated_at?: string
           website?: string | null
@@ -292,6 +300,7 @@ export type Database = {
           phone?: string | null
           rating_avg?: number | null
           rating_count?: number
+          slug?: string
           status?: Database["public"]["Enums"]["place_status"]
           updated_at?: string
           website?: string | null
@@ -459,6 +468,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      slugify: { Args: { v: string }; Returns: string }
+      unaccent: { Args: { "": string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "owner" | "user"
