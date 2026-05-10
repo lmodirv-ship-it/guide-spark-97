@@ -39,12 +39,13 @@ function Reviews() {
       <div className="rounded-2xl border bg-card shadow-card overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-muted/40 text-xs text-muted-foreground">
-            <tr><th className="p-3 text-start">المستخدم</th><th className="p-3 text-start">المكان</th><th className="p-3 text-start">التقييم</th><th className="p-3 text-start">التعليق</th><th className="p-3 text-start">الحالة</th><th className="p-3 text-start">التاريخ</th><th className="p-3 text-start">إجراءات</th></tr>
+            <tr><th className="p-3 text-start">ID</th><th className="p-3 text-start">المستخدم</th><th className="p-3 text-start">المكان</th><th className="p-3 text-start">التقييم</th><th className="p-3 text-start">التعليق</th><th className="p-3 text-start">الحالة</th><th className="p-3 text-start">التاريخ</th><th className="p-3 text-start">إجراءات</th></tr>
           </thead>
           <tbody>
-            {rows.length === 0 && <tr><td colSpan={7} className="p-12 text-center text-muted-foreground">لا توجد تقييمات</td></tr>}
+            {rows.length === 0 && <tr><td colSpan={8} className="p-12 text-center text-muted-foreground">لا توجد تقييمات</td></tr>}
             {rows.map((r) => (
               <tr key={r.id} className="border-t">
+                <td className="p-3"><IdCell publicId={r.public_id} /></td>
                 <td className="p-3 font-medium">{r.profiles?.full_name ?? "مستخدم"}</td>
                 <td className="p-3 text-muted-foreground">{r.places?.name}</td>
                 <td className="p-3"><div className="flex">{Array.from({ length: 5 }).map((_, i) => <Star key={i} className={`h-3.5 w-3.5 ${i < r.rating ? "fill-amber-500 text-amber-500" : "text-muted"}`} />)}</div></td>
