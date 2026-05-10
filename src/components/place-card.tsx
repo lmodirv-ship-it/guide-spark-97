@@ -82,9 +82,9 @@ export function PlaceCard({ p }: { p: PlaceCardData }) {
 
   if (food) {
     return (
-      <a href={EXTERNAL_DELIVERY_URL} target="_blank" rel="noreferrer" className={className}>
+      <Link to="/delivery" className={className}>
         {inner}
-      </a>
+      </Link>
     );
   }
 
