@@ -10,6 +10,7 @@ import {
 import { setLanguage } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { CartDrawer } from "@/components/cart-drawer";
+import { autoDetectAndApplyLanguage } from "@/lib/geo-language";
 import type { User as SupaUser } from "@supabase/supabase-js";
 
 const langs = [
@@ -26,6 +27,9 @@ export function SiteHeader() {
     // Sync dir on mount
     document.documentElement.lang = i18n.language;
     document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr";
+
+    // Auto-detect visitor's country and switch language on first visit
+    autoDetectAndApplyLanguage();
 
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setUser(s?.user ?? null));
     supabase.auth.getSession().then(({ data }) => setUser(data.session?.user ?? null));
