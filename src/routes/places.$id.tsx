@@ -110,17 +110,17 @@ function PlacePage() {
             </div>
           </div>
 
-          {/* Menu / Products */}
+          {/* Menu / Products / Rooms */}
           <section className="mt-10 mb-16">
             <div className="flex items-center gap-2 mb-6">
-              <ShoppingBag className="h-5 w-5 text-primary" />
-              <h2 className="text-xl md:text-2xl font-extrabold">القائمة والمنتجات</h2>
-              <Badge variant="secondary" className="ms-auto">{products.length} عنصر</Badge>
+              {isHotel ? <BedDouble className="h-5 w-5 text-primary" /> : <ShoppingBag className="h-5 w-5 text-primary" />}
+              <h2 className="text-xl md:text-2xl font-extrabold">{isHotel ? "الغرف وأسعار المبيت" : "القائمة والمنتجات"}</h2>
+              <Badge variant="secondary" className="ms-auto">{products.length} {isHotel ? "غرفة" : "عنصر"}</Badge>
             </div>
 
             {products.length === 0 ? (
               <div className="rounded-2xl border border-dashed bg-card p-12 text-center text-muted-foreground">
-                لا توجد منتجات بعد لهذا المكان.
+                {isHotel ? "لا توجد غرف معروضة بعد." : "لا توجد منتجات بعد لهذا المكان."}
               </div>
             ) : (
               <div className="space-y-10">
@@ -136,6 +136,40 @@ function PlacePage() {
                             ) : (
                               <div className="h-full w-full flex items-center justify-center text-muted-foreground text-xs">لا توجد صورة</div>
                             )}
+                            {!p.is_available && (
+                              <Badge variant="secondary" className="absolute top-2 start-2 bg-destructive/90 text-destructive-foreground">غير متوفر</Badge>
+                            )}
+                          </div>
+                          <div className="p-4 flex-1 flex flex-col">
+                            <div className="font-bold">{p.name}</div>
+                            {p.description && <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{p.description}</p>}
+                            <div className="mt-auto pt-3 flex items-center justify-between gap-2">
+                              <div className="text-lg font-extrabold tabular-nums text-primary">
+                                {p.price ? (
+                                  <>
+                                    {p.price} {p.currency || "MAD"}
+                                    {isHotel && <span className="text-xs font-normal text-muted-foreground"> / ليلة</span>}
+                                  </>
+                                ) : "—"}
+                              </div>
+                              {isHotel ? (
+                                <ReservationDialog
+                                  placeId={id}
+                                  placeName={place.name}
+                                  productId={p.id}
+                                  nightlyPrice={p.price}
+                                  currency={p.currency}
+                                  trigger={<Button size="sm" disabled={!p.is_available} className="gap-1"><CalendarCheck className="h-4 w-4" /> احجز</Button>}
+                                />
+                              ) : (
+                                <Button size="sm" disabled={!p.is_available || !p.price} onClick={() => addItem(p)} className="gap-1">
+                                  <Plus className="h-4 w-4" /> أضف
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                             {!p.is_available && (
                               <Badge variant="secondary" className="absolute top-2 start-2 bg-destructive/90 text-destructive-foreground">غير متوفر</Badge>
                             )}
