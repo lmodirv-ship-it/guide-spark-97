@@ -43,6 +43,7 @@ const slugify = (s: string) =>
 
 export function AutoSearchPanel({ kind, title, hint, context, onSaved }: Props) {
   const fn = useServerFn(runAutoSearch);
+  const createUsersFn = useServerFn(adminCreateUsers);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
