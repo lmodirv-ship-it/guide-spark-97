@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import {
   LayoutDashboard, Store, PlusCircle, Globe2, FolderTree, Package,
-  Inbox, Search, Star, Users, Megaphone, BarChart3, History, Settings, Bot, Hash,
+  Inbox, Search, Star, Users, Megaphone, BarChart3, History, Settings, Bot, Hash, Newspaper,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/brand-logo";
@@ -20,6 +20,7 @@ const items = [
   { to: "/admin/ads", label: "الإعلانات", icon: Megaphone },
   { to: "/admin/reports", label: "التقارير والإحصائيات", icon: BarChart3 },
   { to: "/admin/ids", label: "المعرّفات (IDs)", icon: Hash },
+  { to: "/blog-editor", label: "محرر المدونة", icon: Newspaper },
   { to: "/admin/activity", label: "سجل النشاطات", icon: History },
   { to: "/admin/settings", label: "الإعدادات", icon: Settings },
 ];
