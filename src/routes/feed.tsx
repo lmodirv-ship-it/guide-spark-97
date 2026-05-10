@@ -27,7 +27,7 @@ function FeedPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    (async () => {
+    const fetchPosts = async () => {
       const { data } = await supabase
         .from("posts")
         .select("id, title, excerpt, cover_image, created_at")
@@ -35,7 +35,10 @@ function FeedPage() {
         .order("created_at", { ascending: false });
       setPosts((data ?? []) as Post[]);
       setLoading(false);
-    })();
+    };
+    fetchPosts();
+    const interval = setInterval(fetchPosts, 4 * 60 * 1000); // كل 4 دقائق
+    return () => clearInterval(interval);
   }, []);
 
   return (
