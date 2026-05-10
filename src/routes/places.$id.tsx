@@ -11,6 +11,7 @@ import { cart } from "@/lib/cart-store";
 import { toast } from "sonner";
 import { ReservationDialog } from "@/components/reservation-dialog";
 import { autoSeedProducts } from "@/lib/auto-seed-products.functions";
+import { InlineCheckout } from "@/components/inline-checkout";
 
 export const Route = createFileRoute("/places/$id")({ component: PlacePage });
 
@@ -197,6 +198,8 @@ function PlacePage() {
               </div>
             )}
           </section>
+
+          <InlineCheckout placeId={id} />
         </div>
       </main>
       <SiteFooter />
