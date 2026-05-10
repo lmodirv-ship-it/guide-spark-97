@@ -1,0 +1,1 @@
+ALTER TABLE public.countries ADD COLUMN IF NOT EXISTS languages text;

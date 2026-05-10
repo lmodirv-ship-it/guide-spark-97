@@ -33,7 +33,7 @@ function Locations() {
 
 function CountriesTab() {
   const [rows, setRows] = useState<any[]>([]);
-  const [form, setForm] = useState({ code: "", name_ar: "", name_fr: "", name_en: "", flag_emoji: "", currency: "", phone_code: "" });
+  const [form, setForm] = useState({ code: "", name_ar: "", name_fr: "", name_en: "", flag_emoji: "", currency: "", phone_code: "", languages: "" });
   const load = async () => {
     const { data } = await supabase.from("countries").select("*").order("name_ar");
     setRows(data ?? []);
@@ -45,7 +45,7 @@ function CountriesTab() {
     const slug = form.name_en?.toLowerCase().replace(/\s+/g, "-") || form.code.toLowerCase();
     const { error } = await supabase.from("countries").insert({ ...form, slug });
     if (error) return toast.error(error.message);
-    toast.success("تمت الإضافة"); setForm({ code: "", name_ar: "", name_fr: "", name_en: "", flag_emoji: "", currency: "", phone_code: "" }); load();
+    toast.success("تمت الإضافة"); setForm({ code: "", name_ar: "", name_fr: "", name_en: "", flag_emoji: "", currency: "", phone_code: "", languages: "" }); load();
   };
 
   const toggle = async (r: any) => {
@@ -56,18 +56,19 @@ function CountriesTab() {
 
   return (
     <div className="rounded-2xl border bg-card p-5 shadow-card mt-4">
-      <div className="grid md:grid-cols-7 gap-2 mb-4">
+      <div className="grid md:grid-cols-8 gap-2 mb-4">
         <Input placeholder="الرمز (MA)" value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })} />
         <Input placeholder="اسم عربي" value={form.name_ar} onChange={(e) => setForm({ ...form, name_ar: e.target.value })} />
         <Input placeholder="Nom FR" value={form.name_fr} onChange={(e) => setForm({ ...form, name_fr: e.target.value })} />
         <Input placeholder="Name EN" value={form.name_en} onChange={(e) => setForm({ ...form, name_en: e.target.value })} />
         <Input placeholder="🇲🇦" value={form.flag_emoji} onChange={(e) => setForm({ ...form, flag_emoji: e.target.value })} />
         <Input placeholder="MAD" value={form.currency} onChange={(e) => setForm({ ...form, currency: e.target.value })} />
+        <Input placeholder="اللغات" value={form.languages} onChange={(e) => setForm({ ...form, languages: e.target.value })} />
         <Button onClick={add}><Plus className="h-4 w-4 me-1" /> إضافة</Button>
       </div>
       <table className="w-full text-sm">
         <thead className="bg-muted/40 text-xs text-muted-foreground">
-          <tr><th className="p-3 text-start">ID</th><th className="p-3 text-start">العلم</th><th className="p-3 text-start">الرمز</th><th className="p-3 text-start">الاسم</th><th className="p-3 text-start">العملة</th><th className="p-3 text-start">الحالة</th><th className="p-3 text-start"></th></tr>
+          <tr><th className="p-3 text-start">ID</th><th className="p-3 text-start">العلم</th><th className="p-3 text-start">الرمز</th><th className="p-3 text-start">الاسم</th><th className="p-3 text-start">العملة</th><th className="p-3 text-start">اللغات</th><th className="p-3 text-start">الحالة</th><th className="p-3 text-start"></th></tr>
         </thead>
         <tbody>
           {rows.map((r) => (
@@ -77,6 +78,7 @@ function CountriesTab() {
               <td className="p-3 tabular-nums">{r.code}</td>
               <td className="p-3 font-medium">{r.name_ar}</td>
               <td className="p-3 text-muted-foreground">{r.currency ?? "—"}</td>
+              <td className="p-3 text-xs text-muted-foreground max-w-[240px] truncate" title={r.languages ?? ""}>{r.languages ?? "—"}</td>
               <td className="p-3"><button onClick={() => toggle(r)} className={r.is_active ? "text-success text-xs" : "text-muted-foreground text-xs"}>● {r.is_active ? "نشط" : "موقوف"}</button></td>
               <td className="p-3"><Button size="icon" variant="ghost" className="h-8 w-8 text-destructive" onClick={() => remove(r.id)}><Trash2 className="h-4 w-4" /></Button></td>
             </tr>
