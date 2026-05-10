@@ -7,7 +7,7 @@ import { useCart, cart, cartCount, cartTotal } from "@/lib/cart-store";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-type Step = "cart" | "register" | "tracking";
+
 
 const TRACKING_STEPS = [
   { key: "pending", label: "تم استلام الطلب", icon: CheckCircle2 },
