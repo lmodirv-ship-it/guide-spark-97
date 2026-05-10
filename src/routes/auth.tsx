@@ -48,6 +48,10 @@ function AuthPage() {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success("تم تسجيل الدخول");
+        try {
+          if (remember) localStorage.setItem(REMEMBER_KEY, JSON.stringify({ email, password }));
+          else localStorage.removeItem(REMEMBER_KEY);
+        } catch {}
         const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", data.user!.id);
         const isAdmin = roles?.some((r: any) => r.role === "admin");
         nav({ to: isAdmin ? "/admin" : "/" });
