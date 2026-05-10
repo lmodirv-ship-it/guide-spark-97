@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminTopbar } from "@/components/admin/admin-topbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { StatusBadge } from "./admin.index";
+import { StatusBadge } from "@/components/admin/status-badge";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/places/")({ component: PlacesAdmin });
