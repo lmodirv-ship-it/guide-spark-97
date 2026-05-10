@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Plus, Trash2, Pencil } from "lucide-react";
+import { IdCell } from "@/components/admin/id-cell";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/locations")({ component: Locations });
@@ -66,11 +67,12 @@ function CountriesTab() {
       </div>
       <table className="w-full text-sm">
         <thead className="bg-muted/40 text-xs text-muted-foreground">
-          <tr><th className="p-3 text-start">العلم</th><th className="p-3 text-start">الرمز</th><th className="p-3 text-start">الاسم</th><th className="p-3 text-start">العملة</th><th className="p-3 text-start">الحالة</th><th className="p-3 text-start"></th></tr>
+          <tr><th className="p-3 text-start">ID</th><th className="p-3 text-start">العلم</th><th className="p-3 text-start">الرمز</th><th className="p-3 text-start">الاسم</th><th className="p-3 text-start">العملة</th><th className="p-3 text-start">الحالة</th><th className="p-3 text-start"></th></tr>
         </thead>
         <tbody>
           {rows.map((r) => (
             <tr key={r.id} className="border-t">
+              <td className="p-3"><IdCell publicId={r.public_id} /></td>
               <td className="p-3 text-xl">{r.flag_emoji}</td>
               <td className="p-3 tabular-nums">{r.code}</td>
               <td className="p-3 font-medium">{r.name_ar}</td>
@@ -127,10 +129,11 @@ function CitiesTab() {
         <Button onClick={add}><Plus className="h-4 w-4 me-1" /> إضافة</Button>
       </div>
       <table className="w-full text-sm">
-        <thead className="bg-muted/40 text-xs text-muted-foreground"><tr><th className="p-3 text-start">المدينة</th><th className="p-3 text-start">الدولة</th><th className="p-3 text-start">الإحداثيات</th><th className="p-3 text-start"></th></tr></thead>
+        <thead className="bg-muted/40 text-xs text-muted-foreground"><tr><th className="p-3 text-start">ID</th><th className="p-3 text-start">المدينة</th><th className="p-3 text-start">الدولة</th><th className="p-3 text-start">الإحداثيات</th><th className="p-3 text-start"></th></tr></thead>
         <tbody>
           {rows.map((r) => (
             <tr key={r.id} className="border-t">
+              <td className="p-3"><IdCell publicId={r.public_id} /></td>
               <td className="p-3 font-medium">{r.name_ar}</td>
               <td className="p-3">{r.countries?.flag_emoji} {r.countries?.name_ar}</td>
               <td className="p-3 text-muted-foreground tabular-nums" dir="ltr">{r.latitude && r.longitude ? `${r.latitude}, ${r.longitude}` : "—"}</td>
