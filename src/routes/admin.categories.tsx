@@ -73,6 +73,7 @@ function FragmentRows({ parent, children, onRemove }: { parent: any; children: a
   return (
     <>
       <tr className="border-t bg-muted/20">
+        <td className="p-3"><IdCell publicId={parent.public_id} /></td>
         <td className="p-3"><span className="inline-block h-4 w-4 rounded" style={{ backgroundColor: parent.color || "#10b981" }} /></td>
         <td className="p-3 font-bold">{parent.name_ar}</td>
         <td className="p-3 text-muted-foreground text-xs">{parent.name_fr} / {parent.name_en}</td>
@@ -82,6 +83,7 @@ function FragmentRows({ parent, children, onRemove }: { parent: any; children: a
       </tr>
       {children.map((c) => (
         <tr key={c.id} className="border-t">
+          <td className="p-3"><IdCell publicId={c.public_id} /></td>
           <td className="p-3 ps-8"><span className="inline-block h-3 w-3 rounded" style={{ backgroundColor: c.color || "#94a3b8" }} /></td>
           <td className="p-3 ps-8 text-sm">└ {c.name_ar}</td>
           <td className="p-3 text-muted-foreground text-xs">{c.name_fr} / {c.name_en}</td>
