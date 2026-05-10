@@ -45,13 +45,18 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur-lg">
       <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4">
         {/* Brand */}
-        <Link to="/" className="flex items-center gap-2 group">
-          <BrandLogo className="h-11 w-11" />
-          <div className="hidden sm:block leading-tight">
-            <div className="text-lg font-extrabold text-foreground">{t("brand")}</div>
-            <div className="text-[10px] text-muted-foreground">{t("tagline")}</div>
-          </div>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2 group">
+            <BrandLogo className="h-11 w-11" />
+            <div className="hidden sm:block leading-tight">
+              <div className="text-lg font-extrabold text-foreground">{t("brand")}</div>
+              <div className="text-[10px] text-muted-foreground">{t("tagline")}</div>
+            </div>
+          </Link>
+          <Link to="/blog">
+            <Button variant="outline" size="sm" className="ms-2">مدونة</Button>
+          </Link>
+        </div>
 
         {/* Nav */}
         <nav className="hidden md:flex items-center gap-1">
