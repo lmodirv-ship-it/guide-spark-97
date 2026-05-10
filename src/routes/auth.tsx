@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/auth")({ component: AuthPage });
 
+const REMEMBER_KEY = "dalilik_remember_me";
+
 function AuthPage() {
   const { t } = useTranslation();
   const nav = useNavigate();
@@ -17,6 +19,19 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [remember, setRemember] = useState(true);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(REMEMBER_KEY);
+      if (saved) {
+        const { email: e, password: p } = JSON.parse(saved);
+        if (e) setEmail(e);
+        if (p) setPassword(p);
+        setRemember(true);
+      }
+    } catch {}
+  }, []);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
