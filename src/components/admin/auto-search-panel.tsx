@@ -202,6 +202,7 @@ function prepareRow(kind: Kind, r: any, context?: string): any {
         flag_emoji: r.flag_emoji ?? null,
         currency: r.currency ?? null,
         phone_code: r.phone_code ?? null,
+        languages: r.languages ?? null,
       };
     case "cities":
       return {
@@ -231,5 +232,23 @@ function prepareRow(kind: Kind, r: any, context?: string): any {
         currency: r.currency ?? "MAD",
         description: r.description ?? null,
       };
+    case "ads":
+      return {
+        title: r.title ?? r.name ?? "إعلان",
+        target_url: r.target_url ?? null,
+        image_url: r.image_url ?? null,
+        status: r.status ?? "active",
+      };
+    case "reviews":
+      return {
+        place_id: context,
+        user_id: null, // filled in saveAll from auth
+        rating: Math.max(1, Math.min(5, Number(r.rating) || 5)),
+        comment: r.comment ?? "",
+        status: "pending",
+      };
+    case "users":
+      // profiles.id must equal auth.users.id — cannot auto-create. Preview only.
+      return null;
   }
 }
