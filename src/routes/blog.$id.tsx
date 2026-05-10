@@ -135,37 +135,49 @@ export const Route = createFileRoute("/blog/$id")({
     const published = new Date(post.created_at).toISOString();
     const modified = new Date(post.updated_at || post.created_at).toISOString();
 
-    const jsonLd = {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "BlogPosting",
-          "@id": `${url}#article`,
-          mainEntityOfPage: { "@type": "WebPage", "@id": url },
-          headline: post.title,
-          description,
-          image: [image],
-          datePublished: published,
-          dateModified: modified,
-          author: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
-          publisher: {
-            "@type": "Organization",
-            name: SITE_NAME,
-            url: SITE_URL,
-            logo: { "@type": "ImageObject", url: `${SITE_URL}/icon-512.png` },
-          },
-          inLanguage: "ar",
+    const faqs = extractFaqs(post.content);
+    const graph: any[] = [
+      {
+        "@type": "BlogPosting",
+        "@id": `${url}#article`,
+        mainEntityOfPage: { "@type": "WebPage", "@id": url },
+        headline: post.title,
+        description,
+        image: [image],
+        datePublished: published,
+        dateModified: modified,
+        author: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+        publisher: {
+          "@type": "Organization",
+          name: SITE_NAME,
+          url: SITE_URL,
+          logo: { "@type": "ImageObject", url: `${SITE_URL}/icon-512.png` },
         },
-        {
-          "@type": "BreadcrumbList",
-          itemListElement: [
-            { "@type": "ListItem", position: 1, name: "الرئيسية", item: SITE_URL },
-            { "@type": "ListItem", position: 2, name: "المدونة", item: `${SITE_URL}/feed` },
-            { "@type": "ListItem", position: 3, name: post.title, item: url },
-          ],
-        },
-      ],
-    };
+        inLanguage: "ar",
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "الرئيسية", item: SITE_URL },
+          { "@type": "ListItem", position: 2, name: "المدونة", item: `${SITE_URL}/feed` },
+          { "@type": "ListItem", position: 3, name: post.title, item: url },
+        ],
+      },
+    ];
+
+    if (faqs.length > 0) {
+      graph.push({
+        "@type": "FAQPage",
+        "@id": `${url}#faq`,
+        mainEntity: faqs.map((f) => ({
+          "@type": "Question",
+          name: f.question,
+          acceptedAnswer: { "@type": "Answer", text: f.answer },
+        })),
+      });
+    }
+
+    const jsonLd = { "@context": "https://schema.org", "@graph": graph };
 
     return {
       meta: [
