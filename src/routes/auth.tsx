@@ -25,9 +25,8 @@ function AuthPage() {
     try {
       const saved = localStorage.getItem(REMEMBER_KEY);
       if (saved) {
-        const { email: e, password: p } = JSON.parse(saved);
+        const { email: e } = JSON.parse(saved);
         if (e) setEmail(e);
-        if (p) setPassword(p);
         setRemember(true);
       }
     } catch {}
@@ -49,7 +48,7 @@ function AuthPage() {
         if (error) throw error;
         toast.success("تم تسجيل الدخول");
         try {
-          if (remember) localStorage.setItem(REMEMBER_KEY, JSON.stringify({ email, password }));
+          if (remember) localStorage.setItem(REMEMBER_KEY, JSON.stringify({ email }));
           else localStorage.removeItem(REMEMBER_KEY);
         } catch {}
         const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", data.user!.id);

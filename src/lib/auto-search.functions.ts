@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const InputSchema = z.object({
   kind: z.enum(["places", "cities", "countries", "categories", "products"]),
@@ -16,8 +17,17 @@ const FIELD_HINTS: Record<string, string> = {
 };
 
 export const runAutoSearch = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((data) => InputSchema.parse(data))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
+    const { data: roles } = await context.supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", context.userId)
+      .eq("role", "admin");
+    if (!roles?.length) {
+      throw new Response("Forbidden", { status: 403 });
+    }
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) {
       return { results: [], error: "LOVABLE_API_KEY غير متوفر" };
