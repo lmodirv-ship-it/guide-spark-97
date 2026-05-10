@@ -6,9 +6,12 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SearchBar } from "@/components/search-bar";
 import { CategoryGrid, type CategoryItem } from "@/components/category-grid";
-import { PlaceCard, type PlaceCardData } from "@/components/place-card";
+import { Link } from "@tanstack/react-router";
+import { Badge } from "@/components/ui/badge";
+import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { HN_RESTAURANTS } from "@/lib/hn-restaurants";
 import heroImg from "@/assets/hero.jpg";
 
 export const Route = createFileRoute("/")({
