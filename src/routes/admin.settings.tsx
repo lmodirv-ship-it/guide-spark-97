@@ -44,7 +44,17 @@ function Settings() {
           <TabsTrigger value="email"><Mail className="h-4 w-4 me-1" /> البريد</TabsTrigger>
           <TabsTrigger value="search"><Search className="h-4 w-4 me-1" /> البحث الآلي</TabsTrigger>
           <TabsTrigger value="policy"><Shield className="h-4 w-4 me-1" /> النشر</TabsTrigger>
+          <TabsTrigger value="account"><KeyRound className="h-4 w-4 me-1" /> حساب المدير</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="account">
+          <Card>
+            <p className="text-xs text-muted-foreground">يجب أن تكون مسجّلًا بحساب المدير لتغيير البريد أو كلمة السر.</p>
+            <Field label="البريد الإلكتروني الجديد"><Input dir="ltr" type="email" placeholder="lmodirv@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} /></Field>
+            <Field label="كلمة سر جديدة"><Input dir="ltr" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} /></Field>
+            <Button onClick={updateCredentials} disabled={loading}>{loading ? "جارٍ الحفظ..." : "تحديث بيانات الدخول"}</Button>
+          </Card>
+        </TabsContent>
 
         <TabsContent value="general">
           <Card>
