@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { runAutoSearch } from "@/lib/auto-search.functions";
 
-type Kind = "places" | "cities" | "countries" | "categories" | "products";
+type Kind = "places" | "cities" | "countries" | "categories" | "products" | "ads" | "users" | "reviews";
 
 interface Props {
   kind: Kind;
@@ -25,6 +25,9 @@ const TABLE_BY_KIND: Record<Kind, string> = {
   countries: "countries",
   categories: "categories",
   products: "products",
+  ads: "ads",
+  users: "profiles",
+  reviews: "reviews",
 };
 
 const slugify = (s: string) =>
@@ -75,10 +78,23 @@ export function AutoSearchPanel({ kind, title, hint, context, onSaved }: Props) 
   const saveAll = async () => {
     const picked = results.filter((_, i) => selected[i]);
     if (!picked.length) return toast.error("لم يتم اختيار أي صف");
+    if (kind === "users") {
+      toast.message("معاينة فقط: لا يمكن إنشاء حسابات مستخدمين تلقائياً (تتطلب تسجيل دخول).");
+      return;
+    }
+    if (kind === "reviews" && !context) {
+      return toast.error("اختر مكاناً أولاً لإضافة تقييمات له");
+    }
     setSaving(true);
     try {
       const table = TABLE_BY_KIND[kind];
-      const rows = picked.map((r) => prepareRow(kind, r, context));
+      let rows = picked.map((r) => prepareRow(kind, r, context)).filter(Boolean);
+      if (kind === "reviews") {
+        const { data: u } = await supabase.auth.getUser();
+        const uid = u?.user?.id;
+        if (!uid) throw new Error("يجب تسجيل الدخول");
+        rows = rows.map((r: any) => ({ ...r, user_id: uid }));
+      }
       const { error } = await supabase.from(table as any).insert(rows as any);
       if (error) throw error;
       toast.success(`تم حفظ ${rows.length} عنصر في قاعدة البيانات`);
@@ -199,6 +215,7 @@ function prepareRow(kind: Kind, r: any, context?: string): any {
         flag_emoji: r.flag_emoji ?? null,
         currency: r.currency ?? null,
         phone_code: r.phone_code ?? null,
+        languages: r.languages ?? null,
       };
     case "cities":
       return {
@@ -228,5 +245,23 @@ function prepareRow(kind: Kind, r: any, context?: string): any {
         currency: r.currency ?? "MAD",
         description: r.description ?? null,
       };
+    case "ads":
+      return {
+        title: r.title ?? r.name ?? "إعلان",
+        target_url: r.target_url ?? null,
+        image_url: r.image_url ?? null,
+        status: r.status ?? "active",
+      };
+    case "reviews":
+      return {
+        place_id: context,
+        user_id: null, // filled in saveAll from auth
+        rating: Math.max(1, Math.min(5, Number(r.rating) || 5)),
+        comment: r.comment ?? "",
+        status: "pending",
+      };
+    case "users":
+      // profiles.id must equal auth.users.id — cannot auto-create. Preview only.
+      return null;
   }
 }

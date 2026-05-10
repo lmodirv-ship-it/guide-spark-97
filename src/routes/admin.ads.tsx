@@ -8,6 +8,7 @@ import { Plus, Trash2, Megaphone, CreditCard } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { IdCell } from "@/components/admin/id-cell";
+import { AutoSearchPanel } from "@/components/admin/auto-search-panel";
 
 export const Route = createFileRoute("/admin/ads")({ component: AdsPage });
 
@@ -47,6 +48,7 @@ function AdsTab() {
 
   return (
     <div className="rounded-2xl border bg-card p-5 shadow-card mt-4">
+      <AutoSearchPanel kind="ads" title="توليد إعلانات تلقائياً" hint="اكتب نوع الإعلان (مثلاً: إعلانات مطاعم، عروض ترويجية...)" onSaved={load} />
       <div className="grid md:grid-cols-5 gap-2 mb-4">
         <Input placeholder="عنوان الإعلان" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
         <Input placeholder="الرابط" dir="ltr" value={form.target_url} onChange={(e) => setForm({ ...form, target_url: e.target.value })} />
