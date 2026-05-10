@@ -85,13 +85,14 @@ export function InlineCheckout({ placeId }: { placeId: string }) {
           address: prof?.address || undefined,
         });
         toast.success("تم تأكيد الطلب");
+        setSnapshot({ items: placeItems, total, currency });
         cart.clear();
-        setStep("tracking");
+        setShowTracking(true);
       } catch (e: any) {
         toast.error(e.message || "تعذر إنشاء الطلب");
       }
     } else {
-      setStep("register");
+      setShowRegister(true);
     }
   };
 
