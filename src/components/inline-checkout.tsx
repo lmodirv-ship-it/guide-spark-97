@@ -143,48 +143,54 @@ export function InlineCheckout({ placeId }: { placeId: string }) {
   return (
     <section className="mt-10 mb-16 rounded-2xl border bg-card shadow-card overflow-hidden">
       {/* Cart panel */}
-      {step !== "tracking" && (
       <div className="p-5 md:p-6">
         <div className="flex items-center gap-2 mb-4">
           <ShoppingCart className="h-5 w-5 text-primary" />
-          <h2 className="text-lg md:text-xl font-extrabold">سلتك من هذا المكان ({count})</h2>
-          <Button variant="ghost" size="sm" className="ms-auto text-destructive" onClick={() => placeItems.forEach((i) => cart.remove(i.id))}>
-            إفراغ
-          </Button>
+          <h2 className="text-lg md:text-xl font-extrabold">سلتك من هذا المكان ({displayItems.reduce((s, x) => s + x.qty, 0)})</h2>
+          {!showTracking && (
+            <Button variant="ghost" size="sm" className="ms-auto text-destructive" onClick={() => placeItems.forEach((i) => cart.remove(i.id))}>
+              إفراغ
+            </Button>
+          )}
         </div>
         <div className="space-y-2">
-          {placeItems.map((it) => (
+          {displayItems.map((it) => (
             <div key={it.id} className="flex items-center gap-3 rounded-xl border p-2">
               {it.image ? <img src={it.image} className="h-12 w-12 rounded-lg object-cover" /> : <div className="h-12 w-12 rounded-lg bg-muted" />}
               <div className="flex-1 min-w-0">
                 <div className="font-medium truncate">{it.name}</div>
                 <div className="text-xs text-muted-foreground tabular-nums">{it.price} {it.currency}</div>
               </div>
-              <div className="flex items-center gap-1">
-                <Button size="icon" variant="outline" className="h-7 w-7" onClick={() => cart.setQty(it.id, it.qty - 1)}><Minus className="h-3 w-3" /></Button>
-                <span className="w-6 text-center text-sm tabular-nums">{it.qty}</span>
-                <Button size="icon" variant="outline" className="h-7 w-7" onClick={() => cart.setQty(it.id, it.qty + 1)}><Plus className="h-3 w-3" /></Button>
-              </div>
-              <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => cart.remove(it.id)}>
-                <Trash2 className="h-3 w-3" />
-              </Button>
+              {!showTracking ? (
+                <>
+                  <div className="flex items-center gap-1">
+                    <Button size="icon" variant="outline" className="h-7 w-7" onClick={() => cart.setQty(it.id, it.qty - 1)}><Minus className="h-3 w-3" /></Button>
+                    <span className="w-6 text-center text-sm tabular-nums">{it.qty}</span>
+                    <Button size="icon" variant="outline" className="h-7 w-7" onClick={() => cart.setQty(it.id, it.qty + 1)}><Plus className="h-3 w-3" /></Button>
+                  </div>
+                  <Button size="icon" variant="ghost" className="h-7 w-7 text-destructive" onClick={() => cart.remove(it.id)}>
+                    <Trash2 className="h-3 w-3" />
+                  </Button>
+                </>
+              ) : (
+                <span className="text-sm tabular-nums text-muted-foreground">×{it.qty}</span>
+              )}
             </div>
           ))}
         </div>
         <div className="mt-4 flex items-center justify-between border-t pt-4">
           <span className="text-muted-foreground">المجموع</span>
-          <span className="text-xl font-extrabold tabular-nums">{total.toFixed(2)} {currency}</span>
+          <span className="text-xl font-extrabold tabular-nums">{displayTotal.toFixed(2)} {displayCurrency}</span>
         </div>
-        {step === "cart" && (
+        {!showRegister && !showTracking && (
           <Button className="w-full mt-4 gap-2" size="lg" onClick={onConfirm}>
             <CheckCircle2 className="h-5 w-5" /> تأكيد الطلب
           </Button>
         )}
       </div>
-      )}
 
       {/* Register panel (inline) */}
-      {step === "register" && !authed && (
+      {showRegister && !authed && !showTracking && (
         <div className="border-t p-5 md:p-6 bg-muted/30 animate-in fade-in slide-in-from-top-2">
           <div className="flex items-center gap-2 mb-4">
             <UserPlus className="h-5 w-5 text-primary" />
