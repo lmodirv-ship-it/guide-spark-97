@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { setLanguage } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
+import { CartDrawer } from "@/components/cart-drawer";
 import type { User as SupaUser } from "@supabase/supabase-js";
 
 const langs = [
@@ -90,6 +91,7 @@ export function SiteHeader() {
               <Heart className="h-5 w-5" />
             </Button>
           </Link>
+          <CartDrawer />
 
           {/* Auth */}
           {user ? (
