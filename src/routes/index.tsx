@@ -6,9 +6,12 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SearchBar } from "@/components/search-bar";
 import { CategoryGrid, type CategoryItem } from "@/components/category-grid";
-import { PlaceCard, type PlaceCardData } from "@/components/place-card";
+import { Link } from "@tanstack/react-router";
+import { Badge } from "@/components/ui/badge";
+import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { HN_RESTAURANTS } from "@/lib/hn-restaurants";
 import heroImg from "@/assets/hero.jpg";
 
 export const Route = createFileRoute("/")({
@@ -19,22 +22,16 @@ function Home() {
   const { t, i18n } = useTranslation();
   const [cats, setCats] = useState<CategoryItem[]>([]);
   const [cities, setCities] = useState<{ id: string; name: string }[]>([]);
-  const [places, setPlaces] = useState<PlaceCardData[]>([]);
+  const [places] = useState(() => HN_RESTAURANTS);
 
   useEffect(() => {
     const lang = i18n.language;
     const nameCol = lang === "fr" ? "name_fr" : lang === "en" ? "name_en" : "name_ar";
 
     (async () => {
-      const [catsRes, citiesRes, placesRes, countsRes] = await Promise.all([
+      const [catsRes, citiesRes, countsRes] = await Promise.all([
         supabase.from("categories").select(`id, slug, icon, color, ${nameCol}`).is("parent_id", null).order("sort_order"),
         supabase.from("cities").select(`id, ${nameCol}`).order(nameCol),
-        supabase
-          .from("places")
-          .select(`id, name, description, cover_image, address, phone, rating_avg, rating_count, is_open, category:categories(name_ar, name_fr, name_en, color, slug)`)
-          .eq("status", "active")
-          .order("rating_avg", { ascending: false })
-          .limit(8),
         supabase.from("places").select("category_id", { count: "exact", head: false }).eq("status", "active"),
       ]);
 
@@ -48,7 +45,6 @@ function Home() {
         })),
       );
       setCities((citiesRes.data ?? []).map((c: any) => ({ id: c.id, name: c[nameCol] })));
-      setPlaces((placesRes.data ?? []) as any);
     })();
   }, [i18n.language]);
 
@@ -92,10 +88,31 @@ function Home() {
               <MapIcon className="h-5 w-5 text-primary" />
               {t("nearby.title")}
             </h2>
-            <Button variant="ghost" size="sm">{t("nearby.viewAll")}</Button>
+            <Button asChild variant="ghost" size="sm"><Link to="/delivery">{t("nearby.viewAll")}</Link></Button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {places.map((p) => <PlaceCard key={p.id} p={p} />)}
+            {places.map((p, i) => (
+              <Link key={`${p.name}-${i}`} to="/delivery" className="group block bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-elegant transition-all border border-border/40">
+                <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                  <img src={p.image} alt={p.name} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <span className="absolute top-3 start-3 h-9 w-9 rounded-full bg-card/95 backdrop-blur flex items-center justify-center shadow-soft">
+                    <Heart className="h-4 w-4 text-destructive" />
+                  </span>
+                  <Badge className="absolute top-3 end-3 bg-card/95 text-foreground hover:bg-card/95 backdrop-blur">
+                    <span className={`h-1.5 w-1.5 rounded-full me-1.5 ${p.open ? "bg-success" : "bg-destructive"}`} />
+                    {p.category}
+                  </Badge>
+                </div>
+                <div className="p-4 space-y-2">
+                  <h3 className="font-bold text-base text-foreground line-clamp-1">{p.name}</h3>
+                  {p.description && <p className="text-xs text-muted-foreground line-clamp-2">{p.description}</p>}
+                  <div className="flex items-center justify-between pt-2 border-t border-border/50 text-xs">
+                    <span className="flex items-center gap-1 font-semibold"><Star className="h-3.5 w-3.5 fill-warning text-warning" />{p.rating.toFixed(1)}</span>
+                    <span className="text-muted-foreground">{p.time} · {p.fee}</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
 
