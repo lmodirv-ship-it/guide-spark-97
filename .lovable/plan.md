@@ -1,54 +1,57 @@
-
 ## الهدف
-مشاركة نفس البيانات فعلياً (مستخدمون، طلبات، أماكن، مطاعم…) بين هذا المشروع وبقية مشاريعك في Lovable الموزّعة على workspaces مختلفة.
+رفع نتائج Lighthouse من (الأداء 47 / SEO 47 / إمكانية الوصول 82) إلى نطاق 90+ عبر معالجة الأسباب الجذرية الظاهرة في التقرير.
 
-## الواقع التقني
-- كل مشروع Lovable Cloud يحصل تلقائياً على **مشروع Supabase مُدار خاص به ومعزول**، حتى لو كانت كلها تحت نفس حساب Supabase.
-- لا توجد طريقة لجعل مشروعَي Lovable Cloud يتشاركان نفس قاعدة البيانات المُدارة.
-- الحل الوحيد لمشاركة البيانات فعلياً: **مشروع Supabase واحد خارجي (تنشئه بنفسك)**، ويتصل به كل مشروع يدوياً.
+## المشاكل الأساسية المكتشفة
 
-## الخطة المقترحة
+1. **شعارات ضخمة جدًا**: `logo-ar.png` (631KB) و `logo-en.png` (534KB) تُعرَض بحجم 77×77 فقط — هدر ~1.1MB.
+2. **خلل Hydration**: `__root.tsx` يضع `lang="ar" dir="rtl"`، لكن `SiteHeader` و `BrandLogo` يعتمدان على `i18n.language` على العميل فقط، فتتبدّل الصورة والنص بعد التحميل ⇒ خطأ React #418 + اضطراب CLS + إرباك Googlebot (يرى صفحة `lang="en"` مع محتوى عربي ⇒ SEO 47).
+3. **صورة LCP (hero.jpg 231KB)** بدون `fetchpriority="high"` و بدون WebP.
+4. **صور Unsplash** بدون `&fm=webp&q=70` — ~250KB إضافية.
+5. **CLS 0.113** من بطاقات الفئات بدون أبعاد ثابتة + الصور بدون `width/height`.
+6. **إمكانية الوصول**: أزرار أيقونية (Bell، Heart، Cart، User) بدون `aria-label`؛ روابط `/favorites` و `/add-place` بلا نص؛ غياب `<main>` landmark؛ تباين منخفض على زر "Search" وزر تحميل APK.
+7. **مساحات لمس صغيرة** على رابط "مدونة".
+8. **خط CameraPlay** من `cdn.gpteng.co` (131KB) بدون `font-display: swap` ولا `preconnect`.
 
-### 1) إنشاء مشروع Supabase مركزي (تقوم به أنت يدوياً)
-- ادخل إلى supabase.com بنفس حسابك → New Project باسم مثل `dalilik-shared`.
-- هذا المشروع سيكون **مصدر الحقيقة الوحيد** لكل مشاريعك.
+## الإصلاحات المقترحة
 
-### 2) تصدير الـ schema الحالي من هذا المشروع
-- سأولّد ملف SQL يحتوي على:
-  - جميع الجداول الموجودة (`places`, `orders`, `products`, `profiles`, `user_roles`, `categories`, `cities`, `countries`, `reviews`, `favorites`, `reservations`, `ads`, `posts`, `subscriptions`, …)
-  - جميع الـ enums (`app_role`, `place_status`)
-  - جميع الـ functions و triggers (`has_role`, `handle_new_user`, `recompute_place_rating`, …)
-  - جميع سياسات RLS كما هي
-- تنفّذ هذا الملف مرة واحدة في المشروع المركزي عبر SQL Editor.
+### 1) تصغير الصور (أكبر مكسب أداء)
+- استبدال `logo-ar.png` و `logo-en.png` بنسخ WebP ≤ 256×256 وحجم ~10-15KB لكل واحدة، عبر `nix run nixpkgs#libwebp`.
+- تحويل `hero.jpg` إلى WebP بجودة 70 (~50KB) مع الإبقاء على JPG للنسخ الاحتياطي.
+- إضافة `fetchPriority="high"` و `loading="eager"` على صورة الـ hero.
+- إضافة معامل `&fm=webp&q=70` لجميع روابط Unsplash في `src/lib/hn-restaurants.ts` ومكونات بطاقات الأماكن.
 
-### 3) (اختياري) ترحيل بيانات هذا المشروع
-- إذا أردت نقل البيانات الحالية: سأولّد ملف `pg_dump --data-only` يمكنك استيراده في المشروع المركزي.
-- إن كانت البيانات تجريبية فقط، تجاهل هذه الخطوة.
+### 2) إصلاح Hydration وعدم تطابق اللغة
+- جعل `<html lang dir>` يُحدَّد ديناميكيًا من جلسة/كوكي على الخادم بدل قيمة ثابتة، أو — أبسط — تثبيت `lang="ar" dir="rtl"` بصفة افتراضية و **عدم تغيير الشعار حسب i18n على العميل** (استعمال شعار موحّد بدون شرط لغوي، أو إخفاء الشعار حتى الـ mount عبر CSS بدون تبديل JSX).
+- في `BrandLogo`: استعمال شعار واحد افتراضي على SSR ثم التبديل بعد `useEffect` فقط إذا اختلفت اللغة (مع `suppressHydrationWarning`).
+- في `SiteHeader`: لفّ نص العلامة `{t("brand")}` بـ `suppressHydrationWarning` أو استعمال نص ثابت SSR.
 
-### 4) فصل هذا المشروع عن Lovable Cloud وربطه بالمشروع المركزي
-- في إعدادات Lovable: Connectors → Lovable Cloud → Disable Cloud (هذا يعطّل Cloud لهذا المشروع وللمشاريع الجديدة).
-- ثم استخدام تكامل Supabase اليدوي وربطه بمشروع `dalilik-shared`.
-- ⚠️ تنبيه مهم: تعطيل Cloud في مشروع لا يمكن التراجع عنه، وكل البيانات الحالية في قاعدة Cloud الخاصة بهذا المشروع ستفقد إن لم تُصدَّرها أولاً.
+### 3) إمكانية الوصول
+- إضافة `aria-label` لكل زر أيقوني (Bell، Heart، Cart، User، حقول الفلترة).
+- إضافة `aria-label` لروابط `/favorites` و `/add-place`.
+- لفّ المحتوى الرئيسي في كل مسار بـ `<main>` بدل `<div>` الحالي.
+- زيادة contrast لزر Search وزر تحميل APK (تعديل tokens في `src/styles.css` أو الكلاس المستعمل).
+- زيادة hit area لرابط "مدونة" (إضافة `min-h-11`).
 
-### 5) تكرار الخطوة 4 لكل مشروع آخر
-- في كل workspace آخر، افتح المشروع → عطّل Lovable Cloud → اربطه بنفس مشروع `dalilik-shared` (نفس URL ونفس anon key).
-- بعد الربط، كل المشاريع ستقرأ/تكتب على نفس الجداول → نفس المستخدمون والطلبات والأماكن في كل مكان.
+### 4) CLS
+- إضافة `width` و `height` على جميع `<img>` في `place-card.tsx` و `category-grid.tsx`.
+- ضبط `aspect-ratio` على بطاقات الفئات لمنع القفز.
 
-### 6) تعديل الكود في كل مشروع للتعامل مع الـ schema الموحّد
-- الـ JavaScript client سيعمل تلقائياً بعد الربط (نفس استدعاءات `supabase.from(...)`)
-- يجب فقط التأكد أن أسماء الجداول والأعمدة في كل مشروع تطابق الـ schema المشترك.
+### 5) SEO إضافي
+- إضافة `<link rel="preconnect" href="https://images.unsplash.com">` و `<link rel="preconnect" href="https://snoqwelzpvwdvanritpa.supabase.co">` في `__root.tsx`.
+- التأكد أن `lang` للصفحة يطابق المحتوى (عربي).
+- إضافة `og:locale="ar_AR"` افتراضيًا.
 
-## ما الذي سأفعله أنا في هذا المشروع عند الموافقة
-1. توليد ملف `migration-shared.sql` كامل (schema + RLS + functions + triggers) جاهز للصق في المشروع المركزي.
-2. توليد دليل خطوات سريع (markdown) لربط بقية المشاريع.
-3. لن أقوم بتعطيل Lovable Cloud تلقائياً — هذا قرار لا رجعة فيه ويجب أن تنفّذه أنت يدوياً عندما تكون مستعدّاً.
+## الملفات المتأثرة (تقدير)
+- `src/assets/logo-ar.png|.webp`, `src/assets/logo-en.png|.webp`, `src/assets/hero.webp` (تحويل + إضافة)
+- `src/components/brand-logo.tsx`
+- `src/components/site-header.tsx`
+- `src/components/place-card.tsx`, `src/components/category-grid.tsx`
+- `src/routes/__root.tsx`, `src/routes/index.tsx`
+- `src/lib/hn-restaurants.ts`
+- `src/styles.css` (تباين)
 
-## ما لا يمكنني فعله
-- لا يمكنني الوصول إلى مشاريعك في workspaces أخرى (لا تظهر لي).
-- لا يمكنني تعطيل Lovable Cloud أو ربط Supabase الخارجي نيابةً عنك — هذه إعدادات يدوية في كل مشروع.
-- لا يمكنني نسخ schema من مشروع آخر دون أن تعطيني وصولاً إليه (يمكنك نقل المشاريع إلى نفس workspace ليتمكّن cross-project من قراءتها).
-
-## بديل أبسط إذا لم ترغب في فصل Cloud
-استخدم هذا المشروع كـ **API مركزي**: المشاريع الأخرى تستدعي بياناته عبر Supabase anon key (للقراءة فقط بحسب RLS) أو عبر Edge Functions عامة. عيبه: لا يمكنها مشاركة جلسات تسجيل الدخول (auth) لأن auth منفصل لكل مشروع Supabase.
-
-هل أبدأ بتوليد ملف الـ schema الموحّد؟
+## النتيجة المتوقعة
+- توفير ~1.4MB من الصور ⇒ LCP من 10.4s ⇒ ~2.5s.
+- إزالة Hydration error ⇒ CLS من 0.113 ⇒ <0.05.
+- SEO من 47 ⇒ 95+ بفضل تطابق اللغة وثبات الـ DOM.
+- A11y من 82 ⇒ 95+ بإضافة aria-label و landmarks.
