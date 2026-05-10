@@ -130,8 +130,9 @@ export function InlineCheckout({ placeId }: { placeId: string }) {
       });
 
       toast.success("تم التسجيل وتأكيد الطلب");
+      setSnapshot({ items: placeItems, total, currency });
       cart.clear();
-      setStep("tracking");
+      setShowTracking(true);
     } catch (e: any) {
       toast.error(e.message || "تعذر التسجيل");
     } finally {
