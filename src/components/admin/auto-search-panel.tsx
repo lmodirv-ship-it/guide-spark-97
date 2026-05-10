@@ -81,7 +81,22 @@ export function AutoSearchPanel({ kind, title, hint, context, onSaved }: Props) 
     const picked = results.filter((_, i) => selected[i]);
     if (!picked.length) return toast.error("لم يتم اختيار أي صف");
     if (kind === "users") {
-      toast.message("معاينة فقط: لا يمكن إنشاء حسابات مستخدمين تلقائياً (تتطلب تسجيل دخول).");
+      setSaving(true);
+      try {
+        const users = picked.map((r: any) => ({
+          full_name: r.full_name ?? r.name ?? "مستخدم",
+          phone: r.phone ?? null,
+          preferred_language: r.preferred_language ?? "ar",
+          avatar_url: r.avatar_url ?? null,
+          email: r.email ?? null,
+        }));
+        const out = await createUsersFn({ data: { users } });
+        if (out.created > 0) toast.success(`تم إنشاء ${out.created} مستخدم`);
+        if (out.errors?.length) toast.error(out.errors.slice(0, 3).join(" | "));
+        setResults([]); setSelected({}); onSaved?.();
+      } catch (e: any) {
+        toast.error(e?.message || "فشل إنشاء المستخدمين");
+      } finally { setSaving(false); }
       return;
     }
     if (kind === "reviews" && !context) {
