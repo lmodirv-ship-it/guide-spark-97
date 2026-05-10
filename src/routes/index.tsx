@@ -124,17 +124,18 @@ function Home() {
                 <Smartphone className="h-5 w-5 text-primary-glow" />
               </div>
               <div>
-                <div className="font-bold">{t("app.title")}</div>
-                <div className="text-xs opacity-75">{t("app.subtitle")}</div>
+                <div className="font-bold">تطبيق HN Driver</div>
+                <div className="text-xs opacity-75">حمّل تطبيق التوصيل الآن</div>
               </div>
             </div>
             <div className="mt-4 flex gap-2">
-              <button className="flex-1 bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-xs font-medium hover:bg-black/60 transition">
-                ▶ {t("app.google")}
-              </button>
-              <button className="flex-1 bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-xs font-medium hover:bg-black/60 transition">
-                 {t("app.apple")}
-              </button>
+              <a
+                href="https://typamugwwatqmdkxkfof.supabase.co/storage/v1/object/public/blog-images/downloads%2Fhn-driver.apk"
+                download
+                className="flex-1 text-center bg-primary text-primary-foreground rounded-lg px-3 py-2 text-xs font-semibold hover:opacity-90 transition"
+              >
+                ⬇ تحميل APK
+              </a>
             </div>
           </div>
         </aside>
