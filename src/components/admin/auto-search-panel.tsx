@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { runAutoSearch } from "@/lib/auto-search.functions";
+import { adminCreateUsers } from "@/lib/admin-create-users.functions";
 
 type Kind = "places" | "cities" | "countries" | "categories" | "products" | "ads" | "users" | "reviews";
 
@@ -42,6 +43,7 @@ const slugify = (s: string) =>
 
 export function AutoSearchPanel({ kind, title, hint, context, onSaved }: Props) {
   const fn = useServerFn(runAutoSearch);
+  const createUsersFn = useServerFn(adminCreateUsers);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -79,7 +81,22 @@ export function AutoSearchPanel({ kind, title, hint, context, onSaved }: Props) 
     const picked = results.filter((_, i) => selected[i]);
     if (!picked.length) return toast.error("لم يتم اختيار أي صف");
     if (kind === "users") {
-      toast.message("معاينة فقط: لا يمكن إنشاء حسابات مستخدمين تلقائياً (تتطلب تسجيل دخول).");
+      setSaving(true);
+      try {
+        const users = picked.map((r: any) => ({
+          full_name: r.full_name ?? r.name ?? "مستخدم",
+          phone: r.phone ?? null,
+          preferred_language: r.preferred_language ?? "ar",
+          avatar_url: r.avatar_url ?? null,
+          email: r.email ?? null,
+        }));
+        const out = await createUsersFn({ data: { users } });
+        if (out.created > 0) toast.success(`تم إنشاء ${out.created} مستخدم`);
+        if (out.errors?.length) toast.error(out.errors.slice(0, 3).join(" | "));
+        setResults([]); setSelected({}); onSaved?.();
+      } catch (e: any) {
+        toast.error(e?.message || "فشل إنشاء المستخدمين");
+      } finally { setSaving(false); }
       return;
     }
     if (kind === "reviews" && !context) {
