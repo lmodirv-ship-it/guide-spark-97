@@ -41,6 +41,8 @@ function PlacePage() {
     supabase.from("places").select("*, category:categories(name_ar, name_en, slug, color), city:cities(name_ar)").eq("id", id).single()
       .then(({ data }) => setPlace(data));
     loadProducts();
+    const interval = setInterval(loadProducts, 4 * 60 * 1000); // تحديث المنتجات كل 4 دقائق
+    return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
