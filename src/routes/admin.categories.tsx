@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminTopbar } from "@/components/admin/admin-topbar";
+import { AutoSearchPanel } from "@/components/admin/auto-search-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Trash2 } from "lucide-react";
@@ -37,6 +38,7 @@ function Categories() {
   return (
     <>
       <AdminTopbar title="إدارة التصنيفات" subtitle={`${rows.length} تصنيف`} />
+      <AutoSearchPanel kind="categories" onSaved={load} />
       <div className="rounded-2xl border bg-card p-5 shadow-card">
         <div className="grid md:grid-cols-7 gap-2 mb-4">
           <Input placeholder="اسم عربي *" value={form.name_ar} onChange={(e) => setForm({ ...form, name_ar: e.target.value })} />
