@@ -25,9 +25,8 @@ function AuthPage() {
     try {
       const saved = localStorage.getItem(REMEMBER_KEY);
       if (saved) {
-        const { email: e, password: p } = JSON.parse(saved);
+        const { email: e } = JSON.parse(saved);
         if (e) setEmail(e);
-        if (p) setPassword(p);
         setRemember(true);
       }
     } catch {}
