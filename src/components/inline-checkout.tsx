@@ -31,9 +31,45 @@ export function InlineCheckout({ placeId }: { placeId: string }) {
 
   if (placeItems.length === 0) return null;
 
-  const onConfirm = () => {
-    if (authed) setStep("tracking");
-    else setStep("register");
+  const saveOrder = async (userId: string | null, info: { name: string; phone: string; email?: string; address?: string }) => {
+    const { error } = await supabase.from("orders").insert({
+      user_id: userId,
+      place_id: placeId,
+      guest_name: info.name,
+      guest_phone: info.phone,
+      guest_email: info.email,
+      address: info.address,
+      items: placeItems.map((i) => ({ id: i.id, name: i.name, price: i.price, qty: i.qty, currency: i.currency })),
+      total,
+      currency,
+      status: "pending",
+    });
+    if (error) throw error;
+  };
+
+  const onConfirm = async () => {
+    if (authed) {
+      try {
+        const { data } = await supabase.auth.getUser();
+        const uid = data.user?.id ?? null;
+        const { data: prof } = uid
+          ? await supabase.from("profiles").select("full_name, phone, address").eq("id", uid).maybeSingle()
+          : { data: null as any };
+        await saveOrder(uid, {
+          name: prof?.full_name || data.user?.email || "زبون",
+          phone: prof?.phone || "",
+          email: data.user?.email || undefined,
+          address: prof?.address || undefined,
+        });
+        toast.success("تم تأكيد الطلب");
+        cart.clear();
+        setStep("tracking");
+      } catch (e: any) {
+        toast.error(e.message || "تعذر إنشاء الطلب");
+      }
+    } else {
+      setStep("register");
+    }
   };
 
   const onRegister = async () => {
@@ -44,13 +80,33 @@ export function InlineCheckout({ placeId }: { placeId: string }) {
     setBusy(true);
     try {
       const redirectUrl = `${window.location.origin}/`;
-      const { error } = await supabase.auth.signUp({
+      const { data: signUp, error } = await supabase.auth.signUp({
         email: form.email,
         password: form.password,
         options: { emailRedirectTo: redirectUrl, data: { full_name: form.full_name, phone: form.phone } },
       });
       if (error) throw error;
-      toast.success("تم التسجيل بنجاح");
+
+      const uid = signUp.user?.id ?? null;
+      // Save full profile (handle_new_user trigger creates the row; we update extras)
+      if (uid) {
+        await supabase.from("profiles").update({
+          full_name: form.full_name,
+          phone: form.phone,
+          address: form.address || null,
+        }).eq("id", uid);
+      }
+
+      // Link order to the new user
+      await saveOrder(uid, {
+        name: form.full_name,
+        phone: form.phone,
+        email: form.email,
+        address: form.address,
+      });
+
+      toast.success("تم التسجيل وتأكيد الطلب");
+      cart.clear();
       setStep("tracking");
     } catch (e: any) {
       toast.error(e.message || "تعذر التسجيل");
