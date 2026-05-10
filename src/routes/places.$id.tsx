@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Star, Phone, MapPin, Globe, Mail, Plus, ShoppingBag } from "lucide-react";
+import { Star, Phone, MapPin, Globe, Mail, Plus, ShoppingBag, BedDouble, CalendarCheck } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { cart } from "@/lib/cart-store";
 import { toast } from "sonner";
+import { ReservationDialog } from "@/components/reservation-dialog";
 
 export const Route = createFileRoute("/places/$id")({ component: PlacePage });
 
@@ -28,7 +29,7 @@ function PlacePage() {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    supabase.from("places").select("*, category:categories(name_ar, color), city:cities(name_ar)").eq("id", id).single()
+    supabase.from("places").select("*, category:categories(name_ar, name_en, slug, color), city:cities(name_ar)").eq("id", id).single()
       .then(({ data }) => setPlace(data));
     supabase.from("products").select("*").eq("place_id", id).order("sort_order").order("created_at")
       .then(({ data }) => setProducts((data ?? []) as any));
@@ -58,6 +59,13 @@ function PlacePage() {
     toast.success(`تمت إضافة ${p.name} إلى السلة`);
   };
 
+  const isHotel = useMemo(() => {
+    const c = place?.category;
+    if (!c) return false;
+    const hay = `${c.slug || ""} ${c.name_en || ""} ${c.name_ar || ""}`.toLowerCase();
+    return /hotel|hostel|riad|lodging|accom|فندق|فنادق|نزل|إقامة|رياض/i.test(hay);
+  }, [place]);
+
   if (!place) return <div className="min-h-screen flex flex-col"><SiteHeader /><div className="flex-1 flex items-center justify-center text-muted-foreground">جارٍ التحميل...</div></div>;
 
   return (
@@ -82,7 +90,15 @@ function PlacePage() {
                 </div>
               </div>
               <div className="flex gap-2">
-                {place.phone && <Button asChild><a href={`tel:${place.phone}`}><Phone className="h-4 w-4 me-2" />اتصل</a></Button>}
+                {isHotel && (
+                  <ReservationDialog
+                    placeId={id}
+                    placeName={place.name}
+                    currency={products[0]?.currency || "MAD"}
+                    trigger={<Button className="gap-1"><CalendarCheck className="h-4 w-4" /> احجز الآن</Button>}
+                  />
+                )}
+                {place.phone && <Button variant={isHotel ? "outline" : "default"} asChild><a href={`tel:${place.phone}`}><Phone className="h-4 w-4 me-2" />اتصل</a></Button>}
               </div>
             </div>
             {place.description && <p className="mt-6 text-foreground/80 leading-relaxed">{place.description}</p>}
@@ -94,17 +110,17 @@ function PlacePage() {
             </div>
           </div>
 
-          {/* Menu / Products */}
+          {/* Menu / Products / Rooms */}
           <section className="mt-10 mb-16">
             <div className="flex items-center gap-2 mb-6">
-              <ShoppingBag className="h-5 w-5 text-primary" />
-              <h2 className="text-xl md:text-2xl font-extrabold">القائمة والمنتجات</h2>
-              <Badge variant="secondary" className="ms-auto">{products.length} عنصر</Badge>
+              {isHotel ? <BedDouble className="h-5 w-5 text-primary" /> : <ShoppingBag className="h-5 w-5 text-primary" />}
+              <h2 className="text-xl md:text-2xl font-extrabold">{isHotel ? "الغرف وأسعار المبيت" : "القائمة والمنتجات"}</h2>
+              <Badge variant="secondary" className="ms-auto">{products.length} {isHotel ? "غرفة" : "عنصر"}</Badge>
             </div>
 
             {products.length === 0 ? (
               <div className="rounded-2xl border border-dashed bg-card p-12 text-center text-muted-foreground">
-                لا توجد منتجات بعد لهذا المكان.
+                {isHotel ? "لا توجد غرف معروضة بعد." : "لا توجد منتجات بعد لهذا المكان."}
               </div>
             ) : (
               <div className="space-y-10">
@@ -129,11 +145,27 @@ function PlacePage() {
                             {p.description && <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{p.description}</p>}
                             <div className="mt-auto pt-3 flex items-center justify-between gap-2">
                               <div className="text-lg font-extrabold tabular-nums text-primary">
-                                {p.price ? `${p.price} ${p.currency || "MAD"}` : "—"}
+                                {p.price ? (
+                                  <>
+                                    {p.price} {p.currency || "MAD"}
+                                    {isHotel && <span className="text-xs font-normal text-muted-foreground"> / ليلة</span>}
+                                  </>
+                                ) : "—"}
                               </div>
-                              <Button size="sm" disabled={!p.is_available || !p.price} onClick={() => addItem(p)} className="gap-1">
-                                <Plus className="h-4 w-4" /> أضف
-                              </Button>
+                              {isHotel ? (
+                                <ReservationDialog
+                                  placeId={id}
+                                  placeName={place.name}
+                                  productId={p.id}
+                                  nightlyPrice={p.price}
+                                  currency={p.currency}
+                                  trigger={<Button size="sm" disabled={!p.is_available} className="gap-1"><CalendarCheck className="h-4 w-4" /> احجز</Button>}
+                                />
+                              ) : (
+                                <Button size="sm" disabled={!p.is_available || !p.price} onClick={() => addItem(p)} className="gap-1">
+                                  <Plus className="h-4 w-4" /> أضف
+                                </Button>
+                              )}
                             </div>
                           </div>
                         </div>
