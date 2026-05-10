@@ -2,13 +2,17 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import {
-  fetchHnArticle,
-  hnArticleExternalUrl,
-  hnImageUrl,
-  type HnArticle,
-} from "@/lib/hn-blog";
-import { ExternalLink } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+
+type Post = {
+  id: string;
+  title: string;
+  excerpt: string | null;
+  content: string | null;
+  cover_image: string | null;
+  created_at: string;
+  status: string;
+};
 
 export const Route = createFileRoute("/blog/$id")({
   component: PostPage,
@@ -16,17 +20,17 @@ export const Route = createFileRoute("/blog/$id")({
 
 function PostPage() {
   const { id } = Route.useParams();
-  const [post, setPost] = useState<HnArticle | null>(null);
+  const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    fetchHnArticle(id)
-      .then((p) => setPost(p))
-      .finally(() => setLoading(false));
+    (async () => {
+      const { data } = await supabase.from("posts").select("*").eq("id", id).maybeSingle();
+      setPost(data as Post | null);
+      setLoading(false);
+    })();
   }, [id]);
-
-  const cover = hnImageUrl(post?.featured_image ?? null);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -43,22 +47,14 @@ function PostPage() {
           </div>
         ) : (
           <article>
-            <div className="text-xs text-muted-foreground flex items-center gap-2">
-              {post.published_at && (
-                <span>{new Date(post.published_at).toLocaleDateString("ar")}</span>
-              )}
-              {post.reading_time ? <span>· {post.reading_time} دقائق</span> : null}
-              {post.language ? <span>· {post.language.toUpperCase()}</span> : null}
+            <div className="text-xs text-muted-foreground">
+              {new Date(post.created_at).toLocaleDateString("ar")} · ID: {post.id.slice(0, 8)}
             </div>
-            <h1 className="mt-2 text-3xl md:text-4xl font-extrabold text-foreground">
-              {post.title}
-            </h1>
-            {post.short_description && (
-              <p className="mt-3 text-lg text-muted-foreground">{post.short_description}</p>
-            )}
-            {cover && (
+            <h1 className="mt-2 text-3xl md:text-4xl font-extrabold text-foreground">{post.title}</h1>
+            {post.excerpt && <p className="mt-3 text-lg text-muted-foreground">{post.excerpt}</p>}
+            {post.cover_image && (
               <img
-                src={cover}
+                src={post.cover_image}
                 alt={post.title}
                 className="mt-6 w-full rounded-2xl object-cover max-h-[480px]"
               />
@@ -69,20 +65,10 @@ function PostPage() {
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
             )}
-
-            <div className="mt-10 flex flex-wrap items-center justify-between gap-3">
+            <div className="mt-10">
               <Link to="/feed" className="text-primary underline">
                 ← العودة لقائمة المقالات
               </Link>
-              <a
-                href={hnArticleExternalUrl(post.id)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition"
-              >
-                <ExternalLink className="h-4 w-4" />
-                المصدر: hnChat
-              </a>
             </div>
           </article>
         )}
