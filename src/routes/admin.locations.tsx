@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Plus, Trash2, Pencil } from "lucide-react";
+import { IdCell } from "@/components/admin/id-cell";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/locations")({ component: Locations });
