@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as FeedRouteImport } from './routes/feed'
 import { Route as FavoritesRouteImport } from './routes/favorites'
@@ -39,6 +40,11 @@ import { Route as AdminActivityRouteImport } from './routes/admin.activity'
 import { Route as AdminPlacesIndexRouteImport } from './routes/admin.places.index'
 import { Route as AdminPlacesNewRouteImport } from './routes/admin.places.new'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -195,6 +201,7 @@ export interface FileRoutesByFullPath {
   '/favorites': typeof FavoritesRoute
   '/feed': typeof FeedRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/activity': typeof AdminActivityRoute
   '/admin/ads': typeof AdminAdsRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -225,6 +232,7 @@ export interface FileRoutesByTo {
   '/favorites': typeof FavoritesRoute
   '/feed': typeof FeedRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/activity': typeof AdminActivityRoute
   '/admin/ads': typeof AdminAdsRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -256,6 +264,7 @@ export interface FileRoutesById {
   '/favorites': typeof FavoritesRoute
   '/feed': typeof FeedRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/activity': typeof AdminActivityRoute
   '/admin/ads': typeof AdminAdsRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -289,6 +298,7 @@ export interface FileRouteTypes {
     | '/favorites'
     | '/feed'
     | '/search'
+    | '/sitemap.xml'
     | '/admin/activity'
     | '/admin/ads'
     | '/admin/categories'
@@ -319,6 +329,7 @@ export interface FileRouteTypes {
     | '/favorites'
     | '/feed'
     | '/search'
+    | '/sitemap.xml'
     | '/admin/activity'
     | '/admin/ads'
     | '/admin/categories'
@@ -349,6 +360,7 @@ export interface FileRouteTypes {
     | '/favorites'
     | '/feed'
     | '/search'
+    | '/sitemap.xml'
     | '/admin/activity'
     | '/admin/ads'
     | '/admin/categories'
@@ -381,6 +393,7 @@ export interface RootRouteChildren {
   FavoritesRoute: typeof FavoritesRoute
   FeedRoute: typeof FeedRoute
   SearchRoute: typeof SearchRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   BlogIdRoute: typeof BlogIdRoute
   CategoriesSlugRoute: typeof CategoriesSlugRoute
   IdPublicIdRoute: typeof IdPublicIdRoute
@@ -389,6 +402,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
@@ -655,6 +675,7 @@ const rootRouteChildren: RootRouteChildren = {
   FavoritesRoute: FavoritesRoute,
   FeedRoute: FeedRoute,
   SearchRoute: SearchRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   BlogIdRoute: BlogIdRoute,
   CategoriesSlugRoute: CategoriesSlugRoute,
   IdPublicIdRoute: IdPublicIdRoute,
