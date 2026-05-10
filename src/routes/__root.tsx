@@ -56,9 +56,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/ecc19e5a-8f59-4e77-ba98-8ef909dc2c5a" },
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:type", content: "website" },
+      { property: "og:locale", content: "ar_AR" },
       { name: "google-adsense-account", content: "ca-pub-3443455318197857" },
     ],
-    links: [{ rel: "stylesheet", href: appCss }],
+    links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://images.unsplash.com", crossOrigin: "anonymous" },
+      { rel: "preconnect", href: "https://snoqwelzpvwdvanritpa.supabase.co", crossOrigin: "anonymous" },
+      { rel: "dns-prefetch", href: "https://pagead2.googlesyndication.com" },
+    ],
     scripts: [
       {
         async: true,
