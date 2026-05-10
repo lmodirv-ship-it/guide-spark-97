@@ -29,7 +29,7 @@ function PlacePage() {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    supabase.from("places").select("*, category:categories(name_ar, color), city:cities(name_ar)").eq("id", id).single()
+    supabase.from("places").select("*, category:categories(name_ar, name_en, slug, color), city:cities(name_ar)").eq("id", id).single()
       .then(({ data }) => setPlace(data));
     supabase.from("products").select("*").eq("place_id", id).order("sort_order").order("created_at")
       .then(({ data }) => setProducts((data ?? []) as any));
