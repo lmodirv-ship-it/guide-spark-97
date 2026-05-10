@@ -56,18 +56,19 @@ function CountriesTab() {
 
   return (
     <div className="rounded-2xl border bg-card p-5 shadow-card mt-4">
-      <div className="grid md:grid-cols-7 gap-2 mb-4">
+      <div className="grid md:grid-cols-8 gap-2 mb-4">
         <Input placeholder="الرمز (MA)" value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })} />
         <Input placeholder="اسم عربي" value={form.name_ar} onChange={(e) => setForm({ ...form, name_ar: e.target.value })} />
         <Input placeholder="Nom FR" value={form.name_fr} onChange={(e) => setForm({ ...form, name_fr: e.target.value })} />
         <Input placeholder="Name EN" value={form.name_en} onChange={(e) => setForm({ ...form, name_en: e.target.value })} />
         <Input placeholder="🇲🇦" value={form.flag_emoji} onChange={(e) => setForm({ ...form, flag_emoji: e.target.value })} />
         <Input placeholder="MAD" value={form.currency} onChange={(e) => setForm({ ...form, currency: e.target.value })} />
+        <Input placeholder="اللغات" value={form.languages} onChange={(e) => setForm({ ...form, languages: e.target.value })} />
         <Button onClick={add}><Plus className="h-4 w-4 me-1" /> إضافة</Button>
       </div>
       <table className="w-full text-sm">
         <thead className="bg-muted/40 text-xs text-muted-foreground">
-          <tr><th className="p-3 text-start">ID</th><th className="p-3 text-start">العلم</th><th className="p-3 text-start">الرمز</th><th className="p-3 text-start">الاسم</th><th className="p-3 text-start">العملة</th><th className="p-3 text-start">الحالة</th><th className="p-3 text-start"></th></tr>
+          <tr><th className="p-3 text-start">ID</th><th className="p-3 text-start">العلم</th><th className="p-3 text-start">الرمز</th><th className="p-3 text-start">الاسم</th><th className="p-3 text-start">العملة</th><th className="p-3 text-start">اللغات</th><th className="p-3 text-start">الحالة</th><th className="p-3 text-start"></th></tr>
         </thead>
         <tbody>
           {rows.map((r) => (
