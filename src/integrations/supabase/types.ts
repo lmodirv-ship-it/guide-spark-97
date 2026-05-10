@@ -14,16 +14,455 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          color: string | null
+          created_at: string
+          icon: string | null
+          id: string
+          name_ar: string
+          name_en: string
+          name_fr: string
+          parent_id: string | null
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name_ar: string
+          name_en: string
+          name_fr: string
+          parent_id?: string | null
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name_ar?: string
+          name_en?: string
+          name_fr?: string
+          parent_id?: string | null
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cities: {
+        Row: {
+          country_id: string
+          created_at: string
+          id: string
+          latitude: number | null
+          longitude: number | null
+          name_ar: string
+          name_en: string
+          name_fr: string
+        }
+        Insert: {
+          country_id: string
+          created_at?: string
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name_ar: string
+          name_en: string
+          name_fr: string
+        }
+        Update: {
+          country_id?: string
+          created_at?: string
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name_ar?: string
+          name_en?: string
+          name_fr?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cities_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      countries: {
+        Row: {
+          code: string
+          created_at: string
+          flag_emoji: string | null
+          id: string
+          name_ar: string
+          name_en: string
+          name_fr: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          flag_emoji?: string | null
+          id?: string
+          name_ar: string
+          name_en: string
+          name_fr: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          flag_emoji?: string | null
+          id?: string
+          name_ar?: string
+          name_en?: string
+          name_fr?: string
+        }
+        Relationships: []
+      }
+      favorites: {
+        Row: {
+          created_at: string
+          id: string
+          place_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          place_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          place_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      import_jobs: {
+        Row: {
+          category: string | null
+          city: string | null
+          country: string | null
+          created_at: string
+          id: string
+          query: string | null
+          result_count: number | null
+          status: string
+        }
+        Insert: {
+          category?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          id?: string
+          query?: string | null
+          result_count?: number | null
+          status?: string
+        }
+        Update: {
+          category?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          id?: string
+          query?: string | null
+          result_count?: number | null
+          status?: string
+        }
+        Relationships: []
+      }
+      place_images: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string
+          place_id: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url: string
+          place_id: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string
+          place_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "place_images_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      places: {
+        Row: {
+          address: string | null
+          category_id: string
+          city_id: string
+          country_id: string
+          cover_image: string | null
+          created_at: string
+          description: string | null
+          email: string | null
+          id: string
+          is_featured: boolean
+          is_open: boolean
+          latitude: number | null
+          longitude: number | null
+          name: string
+          owner_id: string | null
+          phone: string | null
+          rating_avg: number | null
+          rating_count: number
+          status: Database["public"]["Enums"]["place_status"]
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          category_id: string
+          city_id: string
+          country_id: string
+          cover_image?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          id?: string
+          is_featured?: boolean
+          is_open?: boolean
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          owner_id?: string | null
+          phone?: string | null
+          rating_avg?: number | null
+          rating_count?: number
+          status?: Database["public"]["Enums"]["place_status"]
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          category_id?: string
+          city_id?: string
+          country_id?: string
+          cover_image?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          id?: string
+          is_featured?: boolean
+          is_open?: boolean
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          owner_id?: string | null
+          phone?: string | null
+          rating_avg?: number | null
+          rating_count?: number
+          status?: Database["public"]["Enums"]["place_status"]
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "places_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "places_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "places_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          created_at: string
+          currency: string | null
+          description: string | null
+          id: string
+          image: string | null
+          is_available: boolean
+          name: string
+          place_id: string
+          price: number | null
+        }
+        Insert: {
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          id?: string
+          image?: string | null
+          is_available?: boolean
+          name: string
+          place_id: string
+          price?: number | null
+        }
+        Update: {
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          id?: string
+          image?: string | null
+          is_available?: boolean
+          name?: string
+          place_id?: string
+          price?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          preferred_language: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          preferred_language?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          preferred_language?: string | null
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          place_id: string
+          rating: number
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          place_id: string
+          rating: number
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          place_id?: string
+          rating?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "owner" | "user"
+      place_status: "pending" | "active" | "suspended" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +589,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "owner", "user"],
+      place_status: ["pending", "active", "suspended", "rejected"],
+    },
   },
 } as const
