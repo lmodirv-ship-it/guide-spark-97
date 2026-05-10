@@ -33,7 +33,7 @@ function Locations() {
 
 function CountriesTab() {
   const [rows, setRows] = useState<any[]>([]);
-  const [form, setForm] = useState({ code: "", name_ar: "", name_fr: "", name_en: "", flag_emoji: "", currency: "", phone_code: "" });
+  const [form, setForm] = useState({ code: "", name_ar: "", name_fr: "", name_en: "", flag_emoji: "", currency: "", phone_code: "", languages: "" });
   const load = async () => {
     const { data } = await supabase.from("countries").select("*").order("name_ar");
     setRows(data ?? []);
