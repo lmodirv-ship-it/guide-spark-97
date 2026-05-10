@@ -23,21 +23,23 @@ export function InlineCheckout({ placeId }: { placeId: string }) {
   const total = cartTotal(placeItems);
   const currency = placeItems[0]?.currency ?? "MAD";
 
-  const [step, setStep] = useState<Step>("cart");
+  const [showRegister, setShowRegister] = useState(false);
+  const [showTracking, setShowTracking] = useState(false);
   const [authed, setAuthed] = useState<boolean>(false);
   const [form, setForm] = useState({ full_name: "", email: "", phone: "", password: "", address: "" });
   const [busy, setBusy] = useState(false);
   const [trackIdx, setTrackIdx] = useState(0);
   const [orderId, setOrderId] = useState<string | null>(null);
+  const [snapshot, setSnapshot] = useState<{ items: typeof placeItems; total: number; currency: string } | null>(null);
 
   useEffect(() => {
-    if (step !== "tracking") return;
+    if (!showTracking) return;
     setTrackIdx(0);
     const t1 = setTimeout(() => setTrackIdx(1), 1500);
     const t2 = setTimeout(() => setTrackIdx(2), 5000);
     const t3 = setTimeout(() => setTrackIdx(3), 12000);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-  }, [step]);
+  }, [showTracking]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setAuthed(!!data.user));
@@ -45,7 +47,11 @@ export function InlineCheckout({ placeId }: { placeId: string }) {
     return () => sub.subscription.unsubscribe();
   }, []);
 
-  if (placeItems.length === 0 && step !== "tracking") return null;
+  if (placeItems.length === 0 && !showTracking) return null;
+
+  const displayItems = showTracking && snapshot ? snapshot.items : placeItems;
+  const displayTotal = showTracking && snapshot ? snapshot.total : total;
+  const displayCurrency = showTracking && snapshot ? snapshot.currency : currency;
 
   const saveOrder = async (userId: string | null, info: { name: string; phone: string; email?: string; address?: string }) => {
     const { data, error } = await supabase.from("orders").insert({
