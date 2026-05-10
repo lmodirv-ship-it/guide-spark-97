@@ -59,6 +59,13 @@ function PlacePage() {
     toast.success(`تمت إضافة ${p.name} إلى السلة`);
   };
 
+  const isHotel = useMemo(() => {
+    const c = place?.category;
+    if (!c) return false;
+    const hay = `${c.slug || ""} ${c.name_en || ""} ${c.name_ar || ""}`.toLowerCase();
+    return /hotel|hostel|riad|lodging|accom|فندق|فنادق|نزل|إقامة|رياض/i.test(hay);
+  }, [place]);
+
   if (!place) return <div className="min-h-screen flex flex-col"><SiteHeader /><div className="flex-1 flex items-center justify-center text-muted-foreground">جارٍ التحميل...</div></div>;
 
   return (
