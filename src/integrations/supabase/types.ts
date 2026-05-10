@@ -54,6 +54,7 @@ export type Database = {
           id: string
           image_url: string | null
           place_id: string | null
+          public_id: string | null
           starts_at: string | null
           status: string
           target_url: string | null
@@ -65,6 +66,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           place_id?: string | null
+          public_id?: string | null
           starts_at?: string | null
           status?: string
           target_url?: string | null
@@ -76,6 +78,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           place_id?: string | null
+          public_id?: string | null
           starts_at?: string | null
           status?: string
           target_url?: string | null
@@ -102,6 +105,7 @@ export type Database = {
           name_en: string
           name_fr: string
           parent_id: string | null
+          public_id: string | null
           slug: string
           sort_order: number
         }
@@ -115,6 +119,7 @@ export type Database = {
           name_en: string
           name_fr: string
           parent_id?: string | null
+          public_id?: string | null
           slug: string
           sort_order?: number
         }
@@ -128,6 +133,7 @@ export type Database = {
           name_en?: string
           name_fr?: string
           parent_id?: string | null
+          public_id?: string | null
           slug?: string
           sort_order?: number
         }
@@ -152,6 +158,7 @@ export type Database = {
           name_ar: string
           name_en: string
           name_fr: string
+          public_id: string | null
           slug: string
         }
         Insert: {
@@ -164,6 +171,7 @@ export type Database = {
           name_ar: string
           name_en: string
           name_fr: string
+          public_id?: string | null
           slug: string
         }
         Update: {
@@ -176,6 +184,7 @@ export type Database = {
           name_ar?: string
           name_en?: string
           name_fr?: string
+          public_id?: string | null
           slug?: string
         }
         Relationships: [
@@ -200,6 +209,7 @@ export type Database = {
           name_en: string
           name_fr: string
           phone_code: string | null
+          public_id: string | null
           slug: string
         }
         Insert: {
@@ -213,6 +223,7 @@ export type Database = {
           name_en: string
           name_fr: string
           phone_code?: string | null
+          public_id?: string | null
           slug: string
         }
         Update: {
@@ -226,6 +237,7 @@ export type Database = {
           name_en?: string
           name_fr?: string
           phone_code?: string | null
+          public_id?: string | null
           slug?: string
         }
         Relationships: []
@@ -725,6 +737,7 @@ export type Database = {
           created_at: string
           id: string
           place_id: string
+          public_id: string | null
           rating: number
           status: string
           user_id: string
@@ -734,6 +747,7 @@ export type Database = {
           created_at?: string
           id?: string
           place_id: string
+          public_id?: string | null
           rating: number
           status?: string
           user_id: string
@@ -743,6 +757,7 @@ export type Database = {
           created_at?: string
           id?: string
           place_id?: string
+          public_id?: string | null
           rating?: number
           status?: string
           user_id?: string
