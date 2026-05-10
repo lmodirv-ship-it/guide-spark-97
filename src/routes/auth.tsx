@@ -30,10 +30,12 @@ function AuthPage() {
         if (error) throw error;
         toast.success("تم إنشاء الحساب! تحقق من بريدك.");
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success("تم تسجيل الدخول");
-        nav({ to: "/" });
+        const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", data.user!.id);
+        const isAdmin = roles?.some((r: any) => r.role === "admin");
+        nav({ to: isAdmin ? "/admin" : "/" });
       }
     } catch (err: any) {
       toast.error(err.message);
