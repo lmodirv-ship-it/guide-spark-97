@@ -42,7 +42,7 @@ function Users() {
         </div>
         <table className="w-full text-sm">
           <thead className="bg-muted/40 text-xs text-muted-foreground">
-            <tr><th className="p-3 text-start">المستخدم</th><th className="p-3 text-start">الهاتف</th><th className="p-3 text-start">اللغة</th><th className="p-3 text-start">الدور</th><th className="p-3 text-start">التاريخ</th><th className="p-3 text-start">إجراءات</th></tr>
+            <tr><th className="p-3 text-start">ID</th><th className="p-3 text-start">المستخدم</th><th className="p-3 text-start">الهاتف</th><th className="p-3 text-start">اللغة</th><th className="p-3 text-start">الدور</th><th className="p-3 text-start">التاريخ</th><th className="p-3 text-start">إجراءات</th></tr>
           </thead>
           <tbody>
             {rows.length === 0 && <tr><td colSpan={6} className="p-12 text-center text-muted-foreground">لا توجد بيانات</td></tr>}
