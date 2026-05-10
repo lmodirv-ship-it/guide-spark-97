@@ -78,10 +78,23 @@ export function AutoSearchPanel({ kind, title, hint, context, onSaved }: Props) 
   const saveAll = async () => {
     const picked = results.filter((_, i) => selected[i]);
     if (!picked.length) return toast.error("لم يتم اختيار أي صف");
+    if (kind === "users") {
+      toast.message("معاينة فقط: لا يمكن إنشاء حسابات مستخدمين تلقائياً (تتطلب تسجيل دخول).");
+      return;
+    }
+    if (kind === "reviews" && !context) {
+      return toast.error("اختر مكاناً أولاً لإضافة تقييمات له");
+    }
     setSaving(true);
     try {
       const table = TABLE_BY_KIND[kind];
-      const rows = picked.map((r) => prepareRow(kind, r, context));
+      let rows = picked.map((r) => prepareRow(kind, r, context)).filter(Boolean);
+      if (kind === "reviews") {
+        const { data: u } = await supabase.auth.getUser();
+        const uid = u?.user?.id;
+        if (!uid) throw new Error("يجب تسجيل الدخول");
+        rows = rows.map((r: any) => ({ ...r, user_id: uid }));
+      }
       const { error } = await supabase.from(table as any).insert(rows as any);
       if (error) throw error;
       toast.success(`تم حفظ ${rows.length} عنصر في قاعدة البيانات`);
