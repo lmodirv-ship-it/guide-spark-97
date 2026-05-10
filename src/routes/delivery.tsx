@@ -66,11 +66,8 @@ function DeliveryPage() {
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {items.map((r, i) => (
-            <a
+            <div
               key={`${r.name}-${i}`}
-              href={SOURCE}
-              target="_blank"
-              rel="noreferrer"
               className="group block bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-elegant transition border border-border/40"
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-muted">
