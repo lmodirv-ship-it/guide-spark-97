@@ -10,9 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as FeedRouteImport } from './routes/feed'
 import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as DeliveryRouteImport } from './routes/delivery'
-import { Route as BlogRouteImport } from './routes/blog'
+import { Route as BlogEditorRouteImport } from './routes/blog-editor'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AddPlaceRouteImport } from './routes/add-place'
@@ -21,6 +22,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as PlacesIdRouteImport } from './routes/places.$id'
 import { Route as IdPublicIdRouteImport } from './routes/id.$publicId'
 import { Route as CategoriesSlugRouteImport } from './routes/categories.$slug'
+import { Route as BlogIdRouteImport } from './routes/blog.$id'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminReviewsRouteImport } from './routes/admin.reviews'
@@ -42,6 +44,11 @@ const SearchRoute = SearchRouteImport.update({
   path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FeedRoute = FeedRouteImport.update({
+  id: '/feed',
+  path: '/feed',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FavoritesRoute = FavoritesRouteImport.update({
   id: '/favorites',
   path: '/favorites',
@@ -52,9 +59,9 @@ const DeliveryRoute = DeliveryRouteImport.update({
   path: '/delivery',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
+const BlogEditorRoute = BlogEditorRouteImport.update({
+  id: '/blog-editor',
+  path: '/blog-editor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -96,6 +103,11 @@ const CategoriesSlugRoute = CategoriesSlugRouteImport.update({
   id: '/categories/$slug',
   path: '/categories/$slug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIdRoute = BlogIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => BlogRoute,
 } as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
@@ -178,9 +190,10 @@ export interface FileRoutesByFullPath {
   '/add-place': typeof AddPlaceRoute
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRoute
+  '/blog-editor': typeof BlogEditorRoute
   '/delivery': typeof DeliveryRoute
   '/favorites': typeof FavoritesRoute
+  '/feed': typeof FeedRoute
   '/search': typeof SearchRoute
   '/admin/activity': typeof AdminActivityRoute
   '/admin/ads': typeof AdminAdsRoute
@@ -195,6 +208,7 @@ export interface FileRoutesByFullPath {
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/blog/$id': typeof BlogIdRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/id/$publicId': typeof IdPublicIdRoute
   '/places/$id': typeof PlacesIdRoute
@@ -206,9 +220,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/add-place': typeof AddPlaceRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRoute
+  '/blog-editor': typeof BlogEditorRoute
   '/delivery': typeof DeliveryRoute
   '/favorites': typeof FavoritesRoute
+  '/feed': typeof FeedRoute
   '/search': typeof SearchRoute
   '/admin/activity': typeof AdminActivityRoute
   '/admin/ads': typeof AdminAdsRoute
@@ -222,6 +237,7 @@ export interface FileRoutesByTo {
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/blog/$id': typeof BlogIdRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/id/$publicId': typeof IdPublicIdRoute
   '/places/$id': typeof PlacesIdRoute
@@ -235,9 +251,10 @@ export interface FileRoutesById {
   '/add-place': typeof AddPlaceRoute
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRoute
+  '/blog-editor': typeof BlogEditorRoute
   '/delivery': typeof DeliveryRoute
   '/favorites': typeof FavoritesRoute
+  '/feed': typeof FeedRoute
   '/search': typeof SearchRoute
   '/admin/activity': typeof AdminActivityRoute
   '/admin/ads': typeof AdminAdsRoute
@@ -252,6 +269,7 @@ export interface FileRoutesById {
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/blog/$id': typeof BlogIdRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/id/$publicId': typeof IdPublicIdRoute
   '/places/$id': typeof PlacesIdRoute
@@ -266,9 +284,10 @@ export interface FileRouteTypes {
     | '/add-place'
     | '/admin'
     | '/auth'
-    | '/blog'
+    | '/blog-editor'
     | '/delivery'
     | '/favorites'
+    | '/feed'
     | '/search'
     | '/admin/activity'
     | '/admin/ads'
@@ -283,6 +302,7 @@ export interface FileRouteTypes {
     | '/admin/reviews'
     | '/admin/settings'
     | '/admin/users'
+    | '/blog/$id'
     | '/categories/$slug'
     | '/id/$publicId'
     | '/places/$id'
@@ -294,9 +314,10 @@ export interface FileRouteTypes {
     | '/'
     | '/add-place'
     | '/auth'
-    | '/blog'
+    | '/blog-editor'
     | '/delivery'
     | '/favorites'
+    | '/feed'
     | '/search'
     | '/admin/activity'
     | '/admin/ads'
@@ -310,6 +331,7 @@ export interface FileRouteTypes {
     | '/admin/reviews'
     | '/admin/settings'
     | '/admin/users'
+    | '/blog/$id'
     | '/categories/$slug'
     | '/id/$publicId'
     | '/places/$id'
@@ -322,9 +344,10 @@ export interface FileRouteTypes {
     | '/add-place'
     | '/admin'
     | '/auth'
-    | '/blog'
+    | '/blog-editor'
     | '/delivery'
     | '/favorites'
+    | '/feed'
     | '/search'
     | '/admin/activity'
     | '/admin/ads'
@@ -339,6 +362,7 @@ export interface FileRouteTypes {
     | '/admin/reviews'
     | '/admin/settings'
     | '/admin/users'
+    | '/blog/$id'
     | '/categories/$slug'
     | '/id/$publicId'
     | '/places/$id'
@@ -352,9 +376,10 @@ export interface RootRouteChildren {
   AddPlaceRoute: typeof AddPlaceRoute
   AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRoute
-  BlogRoute: typeof BlogRoute
+  BlogEditorRoute: typeof BlogEditorRoute
   DeliveryRoute: typeof DeliveryRoute
   FavoritesRoute: typeof FavoritesRoute
+  FeedRoute: typeof FeedRoute
   SearchRoute: typeof SearchRoute
   CategoriesSlugRoute: typeof CategoriesSlugRoute
   IdPublicIdRoute: typeof IdPublicIdRoute
@@ -368,6 +393,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feed': {
+      id: '/feed'
+      path: '/feed'
+      fullPath: '/feed'
+      preLoaderRoute: typeof FeedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/favorites': {
@@ -384,11 +416,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DeliveryRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
+    '/blog-editor': {
+      id: '/blog-editor'
+      path: '/blog-editor'
+      fullPath: '/blog-editor'
+      preLoaderRoute: typeof BlogEditorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -446,6 +478,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/categories/$slug'
       preLoaderRoute: typeof CategoriesSlugRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/blog/$id': {
+      id: '/blog/$id'
+      path: '/$id'
+      fullPath: '/blog/$id'
+      preLoaderRoute: typeof BlogIdRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/admin/users': {
       id: '/admin/users'
@@ -610,9 +649,10 @@ const rootRouteChildren: RootRouteChildren = {
   AddPlaceRoute: AddPlaceRoute,
   AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRoute,
-  BlogRoute: BlogRoute,
+  BlogEditorRoute: BlogEditorRoute,
   DeliveryRoute: DeliveryRoute,
   FavoritesRoute: FavoritesRoute,
+  FeedRoute: FeedRoute,
   SearchRoute: SearchRoute,
   CategoriesSlugRoute: CategoriesSlugRoute,
   IdPublicIdRoute: IdPublicIdRoute,
@@ -621,3 +661,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
