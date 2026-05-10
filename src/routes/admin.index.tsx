@@ -8,7 +8,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { AdminTopbar } from "@/components/admin/admin-topbar";
 import { StatCard } from "@/components/admin/stat-card";
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/admin/status-badge";
 
 export const Route = createFileRoute("/admin/")({ component: AdminDashboard });
 
