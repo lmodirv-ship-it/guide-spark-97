@@ -31,7 +31,7 @@ function Home() {
         supabase.from("cities").select(`id, ${nameCol}`).order(nameCol),
         supabase
           .from("places")
-          .select(`id, name, description, cover_image, address, phone, rating_avg, rating_count, is_open, category:categories(name_ar, name_fr, name_en, color)`)
+          .select(`id, name, description, cover_image, address, phone, rating_avg, rating_count, is_open, category:categories(name_ar, name_fr, name_en, color, slug)`)
           .eq("status", "active")
           .order("rating_avg", { ascending: false })
           .limit(8),
