@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Star, Clock, Truck, ExternalLink, Search } from "lucide-react";
+import { Star, Clock, Truck, Search } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Badge } from "@/components/ui/badge";
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/delivery")({
   component: DeliveryPage,
 });
 
-const SOURCE = "https://www.hn-driver.com/delivery/restaurants";
+
 
 function DeliveryPage() {
   const [q, setQ] = useState("");
@@ -47,10 +47,7 @@ function DeliveryPage() {
           <div>
             <h1 className="text-2xl md:text-3xl font-extrabold">المطاعم والمتاجر</h1>
             <p className="text-sm text-muted-foreground mt-1">
-              قائمة محدّثة من{" "}
-              <a href={SOURCE} target="_blank" rel="noreferrer" className="text-primary hover:underline inline-flex items-center gap-1">
-                hn-driver.com <ExternalLink className="h-3 w-3" />
-              </a>
+              قائمة محدّثة من المطاعم والمتاجر المتاحة للتوصيل
             </p>
           </div>
           <div className="relative w-full sm:w-72">
@@ -69,11 +66,8 @@ function DeliveryPage() {
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {items.map((r, i) => (
-            <a
+            <div
               key={`${r.name}-${i}`}
-              href={SOURCE}
-              target="_blank"
-              rel="noreferrer"
               className="group block bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-elegant transition border border-border/40"
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-muted">
@@ -103,7 +97,7 @@ function DeliveryPage() {
                   )}
                 </div>
               </div>
-            </a>
+            </div>
           ))}
         </div>
 
