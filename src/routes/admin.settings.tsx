@@ -1,17 +1,38 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { AdminTopbar } from "@/components/admin/admin-topbar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Globe, Palette, Mail, Search, Shield } from "lucide-react";
+import { Globe, Palette, Mail, Search, Shield, KeyRound } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/settings")({ component: Settings });
 
 function Settings() {
   const save = () => toast.success("تم حفظ الإعدادات");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const updateCredentials = async () => {
+    if (!email && !password) return toast.error("أدخل بريدًا أو كلمة سر جديدة");
+    setLoading(true);
+    const payload: { email?: string; password?: string } = {};
+    if (email) payload.email = email;
+    if (password) {
+      if (password.length < 6) { setLoading(false); return toast.error("كلمة السر يجب 6 أحرف على الأقل"); }
+      payload.password = password;
+    }
+    const { error } = await supabase.auth.updateUser(payload);
+    setLoading(false);
+    if (error) return toast.error(error.message);
+    toast.success("تم تحديث بيانات الدخول");
+    setEmail(""); setPassword("");
+  };
 
   return (
     <>
