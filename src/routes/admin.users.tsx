@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Search, Shield, User as UserIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { IdCell, ValidateButton } from "@/components/admin/id-cell";
 
 export const Route = createFileRoute("/admin/users")({ component: Users });
 
@@ -41,14 +42,15 @@ function Users() {
         </div>
         <table className="w-full text-sm">
           <thead className="bg-muted/40 text-xs text-muted-foreground">
-            <tr><th className="p-3 text-start">المستخدم</th><th className="p-3 text-start">الهاتف</th><th className="p-3 text-start">اللغة</th><th className="p-3 text-start">الدور</th><th className="p-3 text-start">التاريخ</th><th className="p-3 text-start">إجراءات</th></tr>
+            <tr><th className="p-3 text-start">ID</th><th className="p-3 text-start">المستخدم</th><th className="p-3 text-start">الهاتف</th><th className="p-3 text-start">اللغة</th><th className="p-3 text-start">الدور</th><th className="p-3 text-start">التاريخ</th><th className="p-3 text-start">إجراءات</th></tr>
           </thead>
           <tbody>
-            {rows.length === 0 && <tr><td colSpan={6} className="p-12 text-center text-muted-foreground">لا توجد بيانات</td></tr>}
+            {rows.length === 0 && <tr><td colSpan={7} className="p-12 text-center text-muted-foreground">لا توجد بيانات</td></tr>}
             {rows.map((u) => {
               const role = u.user_roles?.[0]?.role ?? "user";
               return (
                 <tr key={u.id} className="border-t">
+                  <td className="p-3"><IdCell publicId={u.public_id} /></td>
                   <td className="p-3">
                     <div className="flex items-center gap-2">
                       <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
@@ -67,11 +69,14 @@ function Users() {
                   </td>
                   <td className="p-3 text-xs text-muted-foreground">{new Date(u.created_at).toLocaleDateString("ar-MA")}</td>
                   <td className="p-3">
-                    <select value={role} onChange={(e) => setRole(u.id, e.target.value as any)} className="rounded-lg border bg-background px-2 py-1 text-xs">
-                      <option value="user">مستخدم</option>
-                      <option value="owner">مالك مكان</option>
-                      <option value="admin">مدير</option>
-                    </select>
+                    <div className="flex items-center gap-2">
+                      <ValidateButton table="profiles" id={u.id} publicId={u.public_id} onDone={load} />
+                      <select value={role} onChange={(e) => setRole(u.id, e.target.value as any)} className="rounded-lg border bg-background px-2 py-1 text-xs">
+                        <option value="user">مستخدم</option>
+                        <option value="owner">مالك مكان</option>
+                        <option value="admin">مدير</option>
+                      </select>
+                    </div>
                   </td>
                 </tr>
               );

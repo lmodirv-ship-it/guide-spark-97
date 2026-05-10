@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { AutoSearchPanel } from "@/components/admin/auto-search-panel";
+import { IdCell, ValidateButton } from "@/components/admin/id-cell";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/places/")({ component: PlacesAdmin });
@@ -20,7 +21,7 @@ function PlacesAdmin() {
   const load = async () => {
     setLoading(true);
     let query = supabase.from("places")
-      .select("id, name, cover_image, status, phone, is_featured, is_verified, created_at, rating_avg, categories(name_ar), cities(name_ar), countries(name_ar, flag_emoji)")
+      .select("id, public_id, name, cover_image, status, phone, is_featured, is_verified, created_at, rating_avg, categories(name_ar), cities(name_ar), countries(name_ar, flag_emoji)")
       .order("created_at", { ascending: false }).limit(50);
     if (q) query = query.ilike("name", `%${q}%`);
     if (status) query = query.eq("status", status as any);
@@ -90,7 +91,7 @@ function PlacesAdmin() {
               {!loading && rows.length === 0 && <tr><td colSpan={11} className="p-8 text-center text-muted-foreground">لا توجد أماكن</td></tr>}
               {rows.map((p) => (
                 <tr key={p.id} className="border-t hover:bg-muted/30">
-                  <td className="p-3 text-xs text-muted-foreground tabular-nums">#{p.id.slice(0, 6)}</td>
+                  <td className="p-3"><IdCell publicId={p.public_id} /></td>
                   <td className="p-3">
                     {p.cover_image
                       ? <img src={p.cover_image} alt={p.name} className="h-10 w-14 rounded-md object-cover" />
@@ -110,6 +111,7 @@ function PlacesAdmin() {
                   <td className="p-3 text-muted-foreground text-xs">{new Date(p.created_at).toLocaleDateString("ar-MA")}</td>
                   <td className="p-3">
                     <div className="flex items-center gap-1">
+                      <ValidateButton table="places" id={p.id} publicId={p.public_id} currentStatus={p.status} onDone={load} />
                       <Link to="/places/$id" params={{ id: p.id }}>
                         <Button size="icon" variant="ghost" className="h-8 w-8 text-success"><Eye className="h-4 w-4" /></Button>
                       </Link>

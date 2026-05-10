@@ -6,6 +6,7 @@ import { AutoSearchPanel } from "@/components/admin/auto-search-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Trash2 } from "lucide-react";
+import { IdCell, ValidateButton } from "@/components/admin/id-cell";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/products")({ component: Products });
@@ -64,19 +65,25 @@ function Products() {
 
         <table className="w-full text-sm">
           <thead className="bg-muted/40 text-xs text-muted-foreground">
-            <tr><th className="p-3 text-start">الصورة</th><th className="p-3 text-start">المنتج</th><th className="p-3 text-start">المكان</th><th className="p-3 text-start">السعر</th><th className="p-3 text-start">متوفر</th><th className="p-3 text-start">التاريخ</th><th className="p-3 text-start"></th></tr>
+            <tr><th className="p-3 text-start">ID</th><th className="p-3 text-start">الصورة</th><th className="p-3 text-start">المنتج</th><th className="p-3 text-start">المكان</th><th className="p-3 text-start">السعر</th><th className="p-3 text-start">متوفر</th><th className="p-3 text-start">التاريخ</th><th className="p-3 text-start">إجراءات</th></tr>
           </thead>
           <tbody>
-            {rows.length === 0 && <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">لا توجد منتجات بعد</td></tr>}
+            {rows.length === 0 && <tr><td colSpan={8} className="p-8 text-center text-muted-foreground">لا توجد منتجات بعد</td></tr>}
             {rows.map((p) => (
               <tr key={p.id} className="border-t">
+                <td className="p-3"><IdCell publicId={p.public_id} /></td>
                 <td className="p-3">{p.image ? <img src={p.image} className="h-10 w-10 rounded-md object-cover" /> : <div className="h-10 w-10 rounded-md bg-muted" />}</td>
                 <td className="p-3 font-medium">{p.name} {p.category_name && <span className="text-xs text-muted-foreground">/ {p.category_name}</span>}</td>
                 <td className="p-3 text-muted-foreground">{p.places?.name}</td>
                 <td className="p-3 tabular-nums">{p.price ? `${p.price} ${p.currency}` : "—"}</td>
                 <td className="p-3"><button onClick={() => toggle(p)} className={p.is_available ? "text-success text-xs" : "text-muted-foreground text-xs"}>● {p.is_available ? "متوفر" : "غير متوفر"}</button></td>
                 <td className="p-3 text-xs text-muted-foreground">{new Date(p.created_at).toLocaleDateString("ar-MA")}</td>
-                <td className="p-3"><Button size="icon" variant="ghost" className="h-8 w-8 text-destructive" onClick={() => remove(p.id)}><Trash2 className="h-4 w-4" /></Button></td>
+                <td className="p-3">
+                  <div className="flex items-center gap-1">
+                    <ValidateButton table="products" id={p.id} publicId={p.public_id} currentStatus={p.is_available} onDone={load} />
+                    <Button size="icon" variant="ghost" className="h-8 w-8 text-destructive" onClick={() => remove(p.id)}><Trash2 className="h-4 w-4" /></Button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
