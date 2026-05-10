@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { runAutoSearch } from "@/lib/auto-search.functions";
 
-type Kind = "places" | "cities" | "countries" | "categories" | "products";
+type Kind = "places" | "cities" | "countries" | "categories" | "products" | "ads" | "users" | "reviews";
 
 interface Props {
   kind: Kind;
@@ -25,6 +25,9 @@ const TABLE_BY_KIND: Record<Kind, string> = {
   countries: "countries",
   categories: "categories",
   products: "products",
+  ads: "ads",
+  users: "profiles",
+  reviews: "reviews",
 };
 
 const slugify = (s: string) =>
