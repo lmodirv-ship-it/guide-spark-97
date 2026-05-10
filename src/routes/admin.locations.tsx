@@ -67,11 +67,12 @@ function CountriesTab() {
       </div>
       <table className="w-full text-sm">
         <thead className="bg-muted/40 text-xs text-muted-foreground">
-          <tr><th className="p-3 text-start">العلم</th><th className="p-3 text-start">الرمز</th><th className="p-3 text-start">الاسم</th><th className="p-3 text-start">العملة</th><th className="p-3 text-start">الحالة</th><th className="p-3 text-start"></th></tr>
+          <tr><th className="p-3 text-start">ID</th><th className="p-3 text-start">العلم</th><th className="p-3 text-start">الرمز</th><th className="p-3 text-start">الاسم</th><th className="p-3 text-start">العملة</th><th className="p-3 text-start">الحالة</th><th className="p-3 text-start"></th></tr>
         </thead>
         <tbody>
           {rows.map((r) => (
             <tr key={r.id} className="border-t">
+              <td className="p-3"><IdCell publicId={r.public_id} /></td>
               <td className="p-3 text-xl">{r.flag_emoji}</td>
               <td className="p-3 tabular-nums">{r.code}</td>
               <td className="p-3 font-medium">{r.name_ar}</td>
