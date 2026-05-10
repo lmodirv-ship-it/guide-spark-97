@@ -29,7 +29,7 @@ export function InlineCheckout({ placeId }: { placeId: string }) {
     return () => sub.subscription.unsubscribe();
   }, []);
 
-  if (placeItems.length === 0) return null;
+  if (placeItems.length === 0 && step !== "tracking") return null;
 
   const saveOrder = async (userId: string | null, info: { name: string; phone: string; email?: string; address?: string }) => {
     const { error } = await supabase.from("orders").insert({
