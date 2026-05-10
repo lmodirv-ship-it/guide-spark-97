@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as DeliveryRouteImport } from './routes/delivery'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AddPlaceRouteImport } from './routes/add-place'
@@ -49,6 +50,11 @@ const FavoritesRoute = FavoritesRouteImport.update({
 const DeliveryRoute = DeliveryRouteImport.update({
   id: '/delivery',
   path: '/delivery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -172,6 +178,7 @@ export interface FileRoutesByFullPath {
   '/add-place': typeof AddPlaceRoute
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
+  '/blog': typeof BlogRoute
   '/delivery': typeof DeliveryRoute
   '/favorites': typeof FavoritesRoute
   '/search': typeof SearchRoute
@@ -199,6 +206,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/add-place': typeof AddPlaceRoute
   '/auth': typeof AuthRoute
+  '/blog': typeof BlogRoute
   '/delivery': typeof DeliveryRoute
   '/favorites': typeof FavoritesRoute
   '/search': typeof SearchRoute
@@ -227,6 +235,7 @@ export interface FileRoutesById {
   '/add-place': typeof AddPlaceRoute
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
+  '/blog': typeof BlogRoute
   '/delivery': typeof DeliveryRoute
   '/favorites': typeof FavoritesRoute
   '/search': typeof SearchRoute
@@ -257,6 +266,7 @@ export interface FileRouteTypes {
     | '/add-place'
     | '/admin'
     | '/auth'
+    | '/blog'
     | '/delivery'
     | '/favorites'
     | '/search'
@@ -284,6 +294,7 @@ export interface FileRouteTypes {
     | '/'
     | '/add-place'
     | '/auth'
+    | '/blog'
     | '/delivery'
     | '/favorites'
     | '/search'
@@ -311,6 +322,7 @@ export interface FileRouteTypes {
     | '/add-place'
     | '/admin'
     | '/auth'
+    | '/blog'
     | '/delivery'
     | '/favorites'
     | '/search'
@@ -340,6 +352,7 @@ export interface RootRouteChildren {
   AddPlaceRoute: typeof AddPlaceRoute
   AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRoute
+  BlogRoute: typeof BlogRoute
   DeliveryRoute: typeof DeliveryRoute
   FavoritesRoute: typeof FavoritesRoute
   SearchRoute: typeof SearchRoute
@@ -369,6 +382,13 @@ declare module '@tanstack/react-router' {
       path: '/delivery'
       fullPath: '/delivery'
       preLoaderRoute: typeof DeliveryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -590,6 +610,7 @@ const rootRouteChildren: RootRouteChildren = {
   AddPlaceRoute: AddPlaceRoute,
   AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRoute,
+  BlogRoute: BlogRoute,
   DeliveryRoute: DeliveryRoute,
   FavoritesRoute: FavoritesRoute,
   SearchRoute: SearchRoute,
