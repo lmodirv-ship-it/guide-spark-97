@@ -1,14 +1,22 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { SiteHeader } from "@/components/site-header";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { AdminSidebar } from "@/components/admin/admin-sidebar";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin")({
-  component: () => (
-    <div className="min-h-screen flex flex-col bg-background">
-      <SiteHeader />
-      <main className="flex-1 container mx-auto px-4 py-12">
-        <h1 className="text-2xl font-bold">لوحة التحكم</h1>
-        <p className="text-muted-foreground mt-4">قريباً — لوحة إدارة الأماكن والفئات والمستخدمين والإحصاءات.</p>
+  beforeLoad: async () => {
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) throw redirect({ to: "/auth" });
+  },
+  component: AdminLayout,
+});
+
+function AdminLayout() {
+  return (
+    <div className="min-h-screen flex bg-muted/30" dir="rtl">
+      <AdminSidebar />
+      <main className="flex-1 min-w-0 p-6 md:p-8">
+        <Outlet />
       </main>
     </div>
-  ),
-});
+  );
+}
