@@ -13,7 +13,14 @@ export interface PlaceCardData {
   rating_avg: number | null;
   rating_count: number;
   is_open: boolean;
-  category?: { name_ar: string; name_fr: string; name_en: string; color: string | null } | null;
+  category?: { name_ar: string; name_fr: string; name_en: string; color: string | null; slug?: string | null } | null;
+}
+
+const EXTERNAL_DELIVERY_URL = "https://www.hn-driver.com/delivery/restaurants";
+
+function isFoodPlace(p: PlaceCardData) {
+  const hay = `${p.category?.slug || ""} ${p.category?.name_en || ""} ${p.category?.name_ar || ""} ${p.category?.name_fr || ""}`.toLowerCase();
+  return /restaurant|cafe|coffee|food|مطعم|مطاعم|مقهى|مقاهي|قهوة|كافيه/i.test(hay);
 }
 
 export function PlaceCard({ p }: { p: PlaceCardData }) {
@@ -22,12 +29,11 @@ export function PlaceCard({ p }: { p: PlaceCardData }) {
     ? (i18n.language === "fr" ? p.category.name_fr : i18n.language === "en" ? p.category.name_en : p.category.name_ar)
     : null;
 
-  return (
-    <Link
-      to="/places/$id"
-      params={{ id: p.id }}
-      className="group block bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-elegant transition-all border border-border/40"
-    >
+  const food = isFoodPlace(p);
+  const className = "group block bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-elegant transition-all border border-border/40";
+
+  const inner = (
+    <>
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
         {p.cover_image ? (
           <img src={p.cover_image} alt={p.name} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
@@ -71,6 +77,20 @@ export function PlaceCard({ p }: { p: PlaceCardData }) {
           </span>
         </div>
       </div>
+    </>
+  );
+
+  if (food) {
+    return (
+      <a href={EXTERNAL_DELIVERY_URL} target="_blank" rel="noreferrer" className={className}>
+        {inner}
+      </a>
+    );
+  }
+
+  return (
+    <Link to="/places/$id" params={{ id: p.id }} className={className}>
+      {inner}
     </Link>
   );
 }
