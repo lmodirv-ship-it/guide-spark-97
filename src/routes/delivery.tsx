@@ -97,7 +97,7 @@ function DeliveryPage() {
                   )}
                 </div>
               </div>
-            </a>
+            </div>
           ))}
         </div>
 
