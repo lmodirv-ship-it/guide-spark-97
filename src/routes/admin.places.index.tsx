@@ -21,7 +21,7 @@ function PlacesAdmin() {
   const load = async () => {
     setLoading(true);
     let query = supabase.from("places")
-      .select("id, name, cover_image, status, phone, is_featured, is_verified, created_at, rating_avg, categories(name_ar), cities(name_ar), countries(name_ar, flag_emoji)")
+      .select("id, public_id, name, cover_image, status, phone, is_featured, is_verified, created_at, rating_avg, categories(name_ar), cities(name_ar), countries(name_ar, flag_emoji)")
       .order("created_at", { ascending: false }).limit(50);
     if (q) query = query.ilike("name", `%${q}%`);
     if (status) query = query.eq("status", status as any);
