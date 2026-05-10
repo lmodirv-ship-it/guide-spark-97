@@ -6,6 +6,7 @@ import { AutoSearchPanel } from "@/components/admin/auto-search-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Trash2 } from "lucide-react";
+import { IdCell } from "@/components/admin/id-cell";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/categories")({ component: Categories });
