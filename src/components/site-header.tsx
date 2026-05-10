@@ -10,6 +10,7 @@ import {
 import { setLanguage } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { CartDrawer } from "@/components/cart-drawer";
+import { autoDetectAndApplyLanguage } from "@/lib/geo-language";
 import type { User as SupaUser } from "@supabase/supabase-js";
 
 const langs = [
