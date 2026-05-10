@@ -11,6 +11,8 @@ export interface CategoryItem {
   count?: number;
 }
 
+const FOOD_RE = /restaurant|cafe|coffee|food|مطعم|مطاعم|مقهى|مقاهي|قهوة|كافيه/i;
+
 export function CategoryGrid({ categories, title, more }: { categories: CategoryItem[]; title: string; more: string }) {
   const items = categories.slice(0, 6);
   const hasMore = categories.length > 6;
@@ -19,13 +21,10 @@ export function CategoryGrid({ categories, title, more }: { categories: Category
       <div className="grid grid-cols-3 md:grid-cols-7 gap-3 lg:gap-4">
         {items.map((c) => {
           const Icon = (Icons[(c.icon || "Store") as keyof typeof Icons] as LucideIcon) || Icons.Store;
-          return (
-            <Link
-              key={c.id}
-              to="/categories/$slug"
-              params={{ slug: c.slug }}
-              className="bg-card border border-border/40 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 shadow-card hover:shadow-elegant hover:-translate-y-1 transition-all"
-            >
+          const isFood = FOOD_RE.test(`${c.slug} ${c.name}`);
+          const cls = "bg-card border border-border/40 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 shadow-card hover:shadow-elegant hover:-translate-y-1 transition-all";
+          const inner = (
+            <>
               <div
                 className="h-11 w-11 rounded-xl flex items-center justify-center"
                 style={{ background: `${c.color}1a`, color: c.color ?? "var(--primary)" }}
@@ -34,6 +33,16 @@ export function CategoryGrid({ categories, title, more }: { categories: Category
               </div>
               <div className="text-sm font-bold text-foreground text-center line-clamp-1">{c.name}</div>
               {c.count !== undefined && <div className="text-xs text-muted-foreground">{c.count.toLocaleString()}</div>}
+            </>
+          );
+          if (isFood) {
+            return (
+              <Link key={c.id} to="/delivery" className={cls}>{inner}</Link>
+            );
+          }
+          return (
+            <Link key={c.id} to="/categories/$slug" params={{ slug: c.slug }} className={cls}>
+              {inner}
             </Link>
           );
         })}
