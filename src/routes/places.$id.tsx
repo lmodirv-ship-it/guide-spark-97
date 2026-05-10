@@ -90,7 +90,15 @@ function PlacePage() {
                 </div>
               </div>
               <div className="flex gap-2">
-                {place.phone && <Button asChild><a href={`tel:${place.phone}`}><Phone className="h-4 w-4 me-2" />اتصل</a></Button>}
+                {isHotel && (
+                  <ReservationDialog
+                    placeId={id}
+                    placeName={place.name}
+                    currency={products[0]?.currency || "MAD"}
+                    trigger={<Button className="gap-1"><CalendarCheck className="h-4 w-4" /> احجز الآن</Button>}
+                  />
+                )}
+                {place.phone && <Button variant={isHotel ? "outline" : "default"} asChild><a href={`tel:${place.phone}`}><Phone className="h-4 w-4 me-2" />اتصل</a></Button>}
               </div>
             </div>
             {place.description && <p className="mt-6 text-foreground/80 leading-relaxed">{place.description}</p>}
