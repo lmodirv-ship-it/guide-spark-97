@@ -8,6 +8,7 @@ import { Search, Shield, User as UserIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { IdCell, ValidateButton } from "@/components/admin/id-cell";
+import { AutoSearchPanel } from "@/components/admin/auto-search-panel";
 
 export const Route = createFileRoute("/admin/users")({ component: Users });
 
