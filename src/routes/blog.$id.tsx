@@ -40,6 +40,60 @@ function readingTime(content: string | null): number {
   return Math.max(1, Math.round(words / 200));
 }
 
+/**
+ * Extract Q&A pairs from HTML content for FAQPage schema (Featured Snippets).
+ * Strategies (in order):
+ *  1. Heading (h2/h3/h4) ending with "?" or "؟" → answer = following sibling content until next heading.
+ *  2. Strong/bold line ending with "?" or "؟" → answer = remaining text in same <p> or next <p>.
+ *  3. Plain paragraph lines: "Question? Answer." patterns.
+ * Returns max 10 entries, each ≤ 300 chars for the answer.
+ */
+function extractFaqs(html: string | null): { question: string; answer: string }[] {
+  if (!html) return [];
+  const faqs: { question: string; answer: string }[] = [];
+  const seen = new Set<string>();
+
+  const isQuestion = (t: string) => /[?؟]\s*$/.test(t.trim());
+  const clean = (t: string) => t.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+
+  // 1. Headings followed by content
+  const headingRe = /<(h[2-4])[^>]*>([\s\S]*?)<\/\1>([\s\S]*?)(?=<h[2-4][^>]*>|$)/gi;
+  let m: RegExpExecArray | null;
+  while ((m = headingRe.exec(html)) !== null) {
+    const q = clean(m[2]);
+    const a = clean(m[3]);
+    if (q && a && isQuestion(q) && !seen.has(q)) {
+      seen.add(q);
+      faqs.push({ question: q, answer: a.slice(0, 300) });
+    }
+  }
+
+  // 2. <strong>/<b> question inside paragraphs
+  if (faqs.length < 10) {
+    const pRe = /<p[^>]*>([\s\S]*?)<\/p>/gi;
+    let pm: RegExpExecArray | null;
+    const ps: string[] = [];
+    while ((pm = pRe.exec(html)) !== null) ps.push(pm[1]);
+    for (let i = 0; i < ps.length && faqs.length < 10; i++) {
+      const inner = ps[i];
+      const sm = /<(?:strong|b)[^>]*>([\s\S]*?)<\/(?:strong|b)>/i.exec(inner);
+      if (sm) {
+        const q = clean(sm[1]);
+        if (isQuestion(q) && !seen.has(q)) {
+          let a = clean(inner.replace(sm[0], ""));
+          if (!a && i + 1 < ps.length) a = clean(ps[i + 1]);
+          if (a) {
+            seen.add(q);
+            faqs.push({ question: q, answer: a.slice(0, 300) });
+          }
+        }
+      }
+    }
+  }
+
+  return faqs.slice(0, 10);
+}
+
 export const Route = createFileRoute("/blog/$id")({
   loader: async ({ params }) => {
     const { data, error } = await supabase
