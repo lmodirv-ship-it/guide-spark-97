@@ -18,7 +18,7 @@ export const Route = createFileRoute("/delivery")({
   component: DeliveryPage,
 });
 
-const SOURCE = "https://www.hn-driver.com/delivery/restaurants";
+
 
 function DeliveryPage() {
   const [q, setQ] = useState("");
