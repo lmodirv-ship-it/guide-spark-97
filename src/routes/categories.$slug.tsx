@@ -19,7 +19,7 @@ function CategoryPage() {
       setTitle(cat.name_ar);
       const { data } = await supabase
         .from("places")
-        .select(`id, name, description, cover_image, address, phone, rating_avg, rating_count, is_open, category:categories(name_ar, name_fr, name_en, color)`)
+        .select(`id, name, description, cover_image, address, phone, rating_avg, rating_count, is_open, category:categories(name_ar, name_fr, name_en, color, slug)`)
         .eq("status", "active").eq("category_id", cat.id).order("rating_avg", { ascending: false });
       setPlaces((data ?? []) as any);
     })();
