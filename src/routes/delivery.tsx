@@ -1,12 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Star, Clock, Truck, Search } from "lucide-react";
+import { Star, Clock, Truck, Search, Plus, ChevronUp, ShoppingBag } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { HN_RESTAURANTS } from "@/lib/hn-restaurants";
+import { getSampleMenu, stableUUID } from "@/lib/sample-menu";
+import { cart } from "@/lib/cart-store";
+import { toast } from "sonner";
+import { InlineCheckout } from "@/components/inline-checkout";
 
 export const Route = createFileRoute("/delivery")({
   head: () => ({
@@ -18,11 +22,10 @@ export const Route = createFileRoute("/delivery")({
   component: DeliveryPage,
 });
 
-
-
 function DeliveryPage() {
   const [q, setQ] = useState("");
   const [cat, setCat] = useState<string>("الكل");
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
 
   const cats = useMemo(() => {
     const s = new Set<string>();
@@ -58,7 +61,7 @@ function DeliveryPage() {
 
         <div className="flex flex-wrap gap-2 mb-6">
           {cats.map((c) => (
-            <Button key={c} size="sm" variant={cat === c ? "default" : "outline"} onClick={() => setCat(c)}>
+            <Button key={c} size="sm" variant={cat === c ? "default" : "outline"} onClick={() => { setCat(c); setOpenIdx(null); }}>
               {c}
             </Button>
           ))}
@@ -66,9 +69,11 @@ function DeliveryPage() {
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {items.map((r, i) => (
-            <div
+            <button
               key={`${r.name}-${i}`}
-              className="group block bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-elegant transition border border-border/40"
+              type="button"
+              onClick={() => setOpenIdx(openIdx === i ? null : i)}
+              className="group block text-start bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-elegant transition border border-border/40"
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                 <img src={r.image} alt={r.name} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -97,15 +102,108 @@ function DeliveryPage() {
                   )}
                 </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
 
         {items.length === 0 && (
           <div className="text-center text-muted-foreground py-16">لا توجد نتائج مطابقة.</div>
         )}
+
+        {openIdx !== null && items[openIdx] && (
+          <RestaurantPanel
+            key={items[openIdx].name}
+            restaurant={items[openIdx]}
+            onClose={() => setOpenIdx(null)}
+          />
+        )}
       </main>
       <SiteFooter />
     </div>
+  );
+}
+
+function RestaurantPanel({ restaurant, onClose }: { restaurant: typeof HN_RESTAURANTS[number]; onClose: () => void }) {
+  const placeId = useMemo(() => stableUUID(restaurant.name), [restaurant.name]);
+  const menu = useMemo(() => getSampleMenu(restaurant.name, restaurant.category), [restaurant.name, restaurant.category]);
+
+  const addItem = (p: typeof menu[number]) => {
+    cart.add({
+      id: p.id,
+      name: p.name,
+      price: p.price,
+      currency: p.currency,
+      image: p.image,
+      place_id: placeId,
+      place_name: restaurant.name,
+    });
+    toast.success(`تمت إضافة ${p.name}`);
+  };
+
+  return (
+    <section className="mt-10 scroll-mt-24" id="restaurant-panel">
+      <div className="rounded-2xl overflow-hidden border bg-card shadow-elegant">
+        <div className="relative h-48 md:h-64 bg-muted">
+          <img src={restaurant.image} alt={restaurant.name} className="h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={onClose}
+            className="absolute top-3 end-3 gap-1"
+          >
+            <ChevronUp className="h-4 w-4" /> إغلاق
+          </Button>
+          <div className="absolute bottom-4 start-4 end-4 text-white">
+            <div className="flex items-center gap-2 mb-1">
+              <Badge className="bg-card/90 text-foreground">{restaurant.category}</Badge>
+              {restaurant.open && <Badge className="bg-success/90 text-success-foreground">مفتوح</Badge>}
+            </div>
+            <h2 className="text-2xl md:text-3xl font-extrabold">{restaurant.name}</h2>
+            <div className="flex items-center gap-3 mt-1 text-sm">
+              {restaurant.rating != null && (
+                <span className="flex items-center gap-1">
+                  <Star className="h-4 w-4 fill-warning text-warning" />
+                  <span className="font-semibold tabular-nums">{restaurant.rating.toFixed(1)}</span>
+                </span>
+              )}
+              {restaurant.time && <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {restaurant.time}</span>}
+              {restaurant.fee && <span className="flex items-center gap-1"><Truck className="h-3 w-3" /> {restaurant.fee}</span>}
+            </div>
+          </div>
+        </div>
+
+        <div className="p-5 md:p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <ShoppingBag className="h-5 w-5 text-primary" />
+            <h3 className="text-xl font-extrabold">القائمة</h3>
+            <Badge variant="secondary" className="ms-auto">{menu.length} عنصر</Badge>
+          </div>
+          <div className="grid gap-3 md:grid-cols-2">
+            {menu.map((p) => (
+              <div key={p.id} className="group rounded-2xl border bg-card overflow-hidden shadow-card hover:shadow-elegant transition flex flex-row-reverse items-stretch">
+                <div className="w-28 sm:w-36 shrink-0 bg-muted overflow-hidden">
+                  <img src={p.image} alt={p.name} className="h-full w-full object-cover group-hover:scale-105 transition" />
+                </div>
+                <div className="flex-1 p-3 sm:p-4 min-w-0 flex flex-col justify-center">
+                  <div className="font-bold truncate">{p.name}</div>
+                  <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{p.description}</p>
+                  <div className="mt-2 text-base sm:text-lg font-extrabold tabular-nums text-primary">
+                    {p.price} {p.currency}
+                  </div>
+                </div>
+                <div className="flex items-center justify-center p-3 border-s bg-muted/30">
+                  <Button size="sm" onClick={() => addItem(p)} className="gap-1">
+                    <Plus className="h-4 w-4" /> أضف
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <InlineCheckout placeId={placeId} />
+    </section>
   );
 }
