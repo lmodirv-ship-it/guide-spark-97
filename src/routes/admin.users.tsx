@@ -22,7 +22,7 @@ function Users() {
   };
   useEffect(() => { load(); /* eslint-disable-next-line */ }, [q]);
 
-  const setRole = async (user_id: string, role: "admin" | "user" | "moderator") => {
+  const setRole = async (user_id: string, role: "admin" | "user" | "owner") => {
     await supabase.from("user_roles").delete().eq("user_id", user_id);
     const { error } = await supabase.from("user_roles").insert({ user_id, role });
     if (error) return toast.error(error.message);
@@ -62,14 +62,14 @@ function Users() {
                   <td className="p-3">
                     <Badge variant="secondary" className={role === "admin" ? "bg-primary/10 text-primary border-0" : "bg-muted text-muted-foreground border-0"}>
                       {role === "admin" && <Shield className="h-3 w-3 me-1" />}
-                      {role === "admin" ? "مدير" : role === "moderator" ? "مشرف" : "مستخدم"}
+                      {role === "admin" ? "مدير" : role === "owner" ? "مالك مكان" : "مستخدم"}
                     </Badge>
                   </td>
                   <td className="p-3 text-xs text-muted-foreground">{new Date(u.created_at).toLocaleDateString("ar-MA")}</td>
                   <td className="p-3">
                     <select value={role} onChange={(e) => setRole(u.id, e.target.value as any)} className="rounded-lg border bg-background px-2 py-1 text-xs">
                       <option value="user">مستخدم</option>
-                      <option value="moderator">مشرف</option>
+                      <option value="owner">مالك مكان</option>
                       <option value="admin">مدير</option>
                     </select>
                   </td>
