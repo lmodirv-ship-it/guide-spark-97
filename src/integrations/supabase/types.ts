@@ -734,6 +734,72 @@ export type Database = {
         }
         Relationships: []
       }
+      reservations: {
+        Row: {
+          check_in: string
+          check_out: string
+          created_at: string
+          currency: string | null
+          guest_email: string | null
+          guest_name: string
+          guest_phone: string
+          guests: number
+          id: string
+          nightly_price: number | null
+          notes: string | null
+          place_id: string
+          product_id: string | null
+          public_id: string | null
+          rooms: number
+          status: string
+          total_price: number | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          check_in: string
+          check_out: string
+          created_at?: string
+          currency?: string | null
+          guest_email?: string | null
+          guest_name: string
+          guest_phone: string
+          guests?: number
+          id?: string
+          nightly_price?: number | null
+          notes?: string | null
+          place_id: string
+          product_id?: string | null
+          public_id?: string | null
+          rooms?: number
+          status?: string
+          total_price?: number | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          check_in?: string
+          check_out?: string
+          created_at?: string
+          currency?: string | null
+          guest_email?: string | null
+          guest_name?: string
+          guest_phone?: string
+          guests?: number
+          id?: string
+          nightly_price?: number | null
+          notes?: string | null
+          place_id?: string
+          product_id?: string | null
+          public_id?: string | null
+          rooms?: number
+          status?: string
+          total_price?: number | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       reviews: {
         Row: {
           comment: string | null
