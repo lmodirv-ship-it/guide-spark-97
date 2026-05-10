@@ -20,6 +20,7 @@ const items = [
   { to: "/admin/ads", label: "الإعلانات", icon: Megaphone },
   { to: "/admin/reports", label: "التقارير والإحصائيات", icon: BarChart3 },
   { to: "/admin/ids", label: "المعرّفات (IDs)", icon: Hash },
+  { to: "/blog-editor", label: "محرر المدونة", icon: Newspaper },
   { to: "/admin/activity", label: "سجل النشاطات", icon: History },
   { to: "/admin/settings", label: "الإعدادات", icon: Settings },
 ];
