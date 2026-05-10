@@ -78,6 +78,7 @@ function CountriesTab() {
               <td className="p-3 tabular-nums">{r.code}</td>
               <td className="p-3 font-medium">{r.name_ar}</td>
               <td className="p-3 text-muted-foreground">{r.currency ?? "—"}</td>
+              <td className="p-3 text-xs text-muted-foreground max-w-[240px] truncate" title={r.languages ?? ""}>{r.languages ?? "—"}</td>
               <td className="p-3"><button onClick={() => toggle(r)} className={r.is_active ? "text-success text-xs" : "text-muted-foreground text-xs"}>● {r.is_active ? "نشط" : "موقوف"}</button></td>
               <td className="p-3"><Button size="icon" variant="ghost" className="h-8 w-8 text-destructive" onClick={() => remove(r.id)}><Trash2 className="h-4 w-4" /></Button></td>
             </tr>
