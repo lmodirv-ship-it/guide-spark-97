@@ -170,24 +170,6 @@ function PlacePage() {
                           </div>
                         </div>
                       ))}
-                            {!p.is_available && (
-                              <Badge variant="secondary" className="absolute top-2 start-2 bg-destructive/90 text-destructive-foreground">غير متوفر</Badge>
-                            )}
-                          </div>
-                          <div className="p-4 flex-1 flex flex-col">
-                            <div className="font-bold">{p.name}</div>
-                            {p.description && <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{p.description}</p>}
-                            <div className="mt-auto pt-3 flex items-center justify-between gap-2">
-                              <div className="text-lg font-extrabold tabular-nums text-primary">
-                                {p.price ? `${p.price} ${p.currency || "MAD"}` : "—"}
-                              </div>
-                              <Button size="sm" disabled={!p.is_available || !p.price} onClick={() => addItem(p)} className="gap-1">
-                                <Plus className="h-4 w-4" /> أضف
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
                     </div>
                   </div>
                 ))}
