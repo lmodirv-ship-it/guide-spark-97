@@ -28,6 +28,9 @@ export function SiteHeader() {
     document.documentElement.lang = i18n.language;
     document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr";
 
+    // Auto-detect visitor's country and switch language on first visit
+    autoDetectAndApplyLanguage();
+
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setUser(s?.user ?? null));
     supabase.auth.getSession().then(({ data }) => setUser(data.session?.user ?? null));
     return () => sub.subscription.unsubscribe();
