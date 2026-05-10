@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Star, Trash2, Check, X } from "lucide-react";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { toast } from "sonner";
+import { IdCell } from "@/components/admin/id-cell";
 
 export const Route = createFileRoute("/admin/reviews")({ component: Reviews });
 
