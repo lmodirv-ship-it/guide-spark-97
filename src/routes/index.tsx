@@ -1,26 +1,151 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Smartphone, MapPin as MapIcon, Star, ShieldCheck, Headphones } from "lucide-react";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { SearchBar } from "@/components/search-bar";
+import { CategoryGrid, type CategoryItem } from "@/components/category-grid";
+import { PlaceCard, type PlaceCardData } from "@/components/place-card";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import heroImg from "@/assets/hero.jpg";
 
 export const Route = createFileRoute("/")({
-  component: Index,
+  component: Home,
 });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
+function Home() {
+  const { t, i18n } = useTranslation();
+  const [cats, setCats] = useState<CategoryItem[]>([]);
+  const [cities, setCities] = useState<{ id: string; name: string }[]>([]);
+  const [places, setPlaces] = useState<PlaceCardData[]>([]);
+
+  useEffect(() => {
+    const lang = i18n.language;
+    const nameCol = lang === "fr" ? "name_fr" : lang === "en" ? "name_en" : "name_ar";
+
+    (async () => {
+      const [catsRes, citiesRes, placesRes, countsRes] = await Promise.all([
+        supabase.from("categories").select(`id, slug, icon, color, ${nameCol}`).is("parent_id", null).order("sort_order"),
+        supabase.from("cities").select(`id, ${nameCol}`).order(nameCol),
+        supabase
+          .from("places")
+          .select(`id, name, description, cover_image, address, phone, rating_avg, rating_count, is_open, category:categories(name_ar, name_fr, name_en, color)`)
+          .eq("status", "active")
+          .order("rating_avg", { ascending: false })
+          .limit(8),
+        supabase.from("places").select("category_id", { count: "exact", head: false }).eq("status", "active"),
+      ]);
+
+      const counts = new Map<string, number>();
+      (countsRes.data ?? []).forEach((r: any) => counts.set(r.category_id, (counts.get(r.category_id) ?? 0) + 1));
+
+      setCats(
+        (catsRes.data ?? []).map((c: any) => ({
+          id: c.id, slug: c.slug, icon: c.icon, color: c.color,
+          name: c[nameCol], count: counts.get(c.id) ?? 0,
+        })),
+      );
+      setCities((citiesRes.data ?? []).map((c: any) => ({ id: c.id, name: c[nameCol] })));
+      setPlaces((placesRes.data ?? []) as any);
+    })();
+  }, [i18n.language]);
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="min-h-screen bg-background flex flex-col">
+      <SiteHeader />
+
+      {/* Hero */}
+      <section className="relative">
+        <div className="relative h-[460px] md:h-[520px] overflow-hidden">
+          <img src={heroImg} alt="" className="absolute inset-0 h-full w-full object-cover" width={1920} height={1080} />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/60" />
+          <div className="relative container mx-auto px-4 h-full flex flex-col items-center justify-center text-center text-white">
+            <h1 className="text-3xl md:text-5xl font-extrabold drop-shadow-lg">
+              {t("hero.title").split(" ").slice(0, -1).join(" ")}{" "}
+              <span className="text-primary-glow">{t("hero.title").split(" ").slice(-1)}</span>
+            </h1>
+            <p className="mt-3 text-base md:text-lg text-white/85 max-w-2xl">{t("hero.subtitle")}</p>
+          </div>
+        </div>
+
+        {/* Search bar overlapping */}
+        <div className="container mx-auto px-4 -mt-12 relative z-10">
+          <SearchBar
+            cities={cities}
+            categories={cats.map((c) => ({ id: c.id, slug: c.slug, name: c.name }))}
+          />
+        </div>
+      </section>
+
+      {/* Categories */}
+      <div className="mt-8">
+        <CategoryGrid categories={cats} title={t("categories.title")} more={t("categories.more")} />
+      </div>
+
+      {/* Main content + sidebar */}
+      <section className="container mx-auto px-4 mt-12 grid lg:grid-cols-[1fr_340px] gap-6">
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl md:text-2xl font-bold flex items-center gap-2">
+              <MapIcon className="h-5 w-5 text-primary" />
+              {t("nearby.title")}
+            </h2>
+            <Button variant="ghost" size="sm">{t("nearby.viewAll")}</Button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {places.map((p) => <PlaceCard key={p.id} p={p} />)}
+          </div>
+        </div>
+
+        {/* Sidebar */}
+        <aside className="space-y-4">
+          <div className="bg-gradient-to-br from-sidebar to-[oklch(0.22_0.04_265)] text-sidebar-foreground rounded-2xl p-6 shadow-elegant">
+            <div className="flex items-start gap-3">
+              <div className="h-10 w-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Smartphone className="h-5 w-5 text-primary-glow" />
+              </div>
+              <div>
+                <div className="font-bold">{t("app.title")}</div>
+                <div className="text-xs opacity-75">{t("app.subtitle")}</div>
+              </div>
+            </div>
+            <div className="mt-4 flex gap-2">
+              <button className="flex-1 bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-xs font-medium hover:bg-black/60 transition">
+                ▶ {t("app.google")}
+              </button>
+              <button className="flex-1 bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-xs font-medium hover:bg-black/60 transition">
+                 {t("app.apple")}
+              </button>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      {/* Features */}
+      <section className="container mx-auto px-4 mt-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {[
+            { icon: MapIcon, key: "places", color: "var(--primary)" },
+            { icon: Star, key: "reviews", color: "#f59e0b" },
+            { icon: ShieldCheck, key: "info", color: "#10b981" },
+            { icon: Headphones, key: "support", color: "#6366f1" },
+          ].map(({ icon: Icon, key, color }) => (
+            <div key={key} className="bg-card border border-border/40 rounded-2xl p-5 flex items-center gap-4 shadow-card">
+              <div className="h-12 w-12 rounded-xl flex items-center justify-center" style={{ background: `${color}1a`, color }}>
+                <Icon className="h-6 w-6" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-foreground">{t(`features.${key}.t`)}</div>
+                <div className="text-xs text-muted-foreground line-clamp-2">{t(`features.${key}.d`)}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <SiteFooter />
     </div>
   );
-}
-
-function Index() {
-  return <PlaceholderIndex />;
 }
