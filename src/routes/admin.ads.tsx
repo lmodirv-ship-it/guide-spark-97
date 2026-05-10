@@ -57,11 +57,12 @@ function AdsTab() {
         <Button onClick={add}><Plus className="h-4 w-4 me-1" /> إضافة</Button>
       </div>
       <table className="w-full text-sm">
-        <thead className="bg-muted/40 text-xs text-muted-foreground"><tr><th className="p-3 text-start">الصورة</th><th className="p-3 text-start">العنوان</th><th className="p-3 text-start">الرابط</th><th className="p-3 text-start">الحالة</th><th className="p-3 text-start"></th></tr></thead>
+        <thead className="bg-muted/40 text-xs text-muted-foreground"><tr><th className="p-3 text-start">ID</th><th className="p-3 text-start">الصورة</th><th className="p-3 text-start">العنوان</th><th className="p-3 text-start">الرابط</th><th className="p-3 text-start">الحالة</th><th className="p-3 text-start"></th></tr></thead>
         <tbody>
-          {rows.length === 0 && <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">لا توجد إعلانات</td></tr>}
+          {rows.length === 0 && <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">لا توجد إعلانات</td></tr>}
           {rows.map((a) => (
             <tr key={a.id} className="border-t">
+              <td className="p-3"><IdCell publicId={a.public_id} /></td>
               <td className="p-3">{a.image_url ? <img src={a.image_url} className="h-10 w-16 rounded-md object-cover" /> : <div className="h-10 w-16 rounded-md bg-muted" />}</td>
               <td className="p-3 font-medium">{a.title}</td>
               <td className="p-3 text-xs text-muted-foreground truncate max-w-xs" dir="ltr">{a.target_url}</td>
