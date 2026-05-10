@@ -15,8 +15,14 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AddPlaceRouteImport } from './routes/add-place'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as PlacesIdRouteImport } from './routes/places.$id'
 import { Route as CategoriesSlugRouteImport } from './routes/categories.$slug'
+import { Route as AdminProductsRouteImport } from './routes/admin.products'
+import { Route as AdminPlacesRouteImport } from './routes/admin.places'
+import { Route as AdminLocationsRouteImport } from './routes/admin.locations'
+import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
+import { Route as AdminPlacesNewRouteImport } from './routes/admin.places.new'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -48,6 +54,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const PlacesIdRoute = PlacesIdRouteImport.update({
   id: '/places/$id',
   path: '/places/$id',
@@ -58,37 +69,79 @@ const CategoriesSlugRoute = CategoriesSlugRouteImport.update({
   path: '/categories/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminProductsRoute = AdminProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPlacesRoute = AdminPlacesRouteImport.update({
+  id: '/places',
+  path: '/places',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLocationsRoute = AdminLocationsRouteImport.update({
+  id: '/locations',
+  path: '/locations',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPlacesNewRoute = AdminPlacesNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AdminPlacesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/add-place': typeof AddPlaceRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
   '/favorites': typeof FavoritesRoute
   '/search': typeof SearchRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/locations': typeof AdminLocationsRoute
+  '/admin/places': typeof AdminPlacesRouteWithChildren
+  '/admin/products': typeof AdminProductsRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/places/$id': typeof PlacesIdRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/places/new': typeof AdminPlacesNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/add-place': typeof AddPlaceRoute
-  '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/favorites': typeof FavoritesRoute
   '/search': typeof SearchRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/locations': typeof AdminLocationsRoute
+  '/admin/places': typeof AdminPlacesRouteWithChildren
+  '/admin/products': typeof AdminProductsRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/places/$id': typeof PlacesIdRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/places/new': typeof AdminPlacesNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/add-place': typeof AddPlaceRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
   '/favorites': typeof FavoritesRoute
   '/search': typeof SearchRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/locations': typeof AdminLocationsRoute
+  '/admin/places': typeof AdminPlacesRouteWithChildren
+  '/admin/products': typeof AdminProductsRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/places/$id': typeof PlacesIdRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/places/new': typeof AdminPlacesNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -99,18 +152,29 @@ export interface FileRouteTypes {
     | '/auth'
     | '/favorites'
     | '/search'
+    | '/admin/categories'
+    | '/admin/locations'
+    | '/admin/places'
+    | '/admin/products'
     | '/categories/$slug'
     | '/places/$id'
+    | '/admin/'
+    | '/admin/places/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/add-place'
-    | '/admin'
     | '/auth'
     | '/favorites'
     | '/search'
+    | '/admin/categories'
+    | '/admin/locations'
+    | '/admin/places'
+    | '/admin/products'
     | '/categories/$slug'
     | '/places/$id'
+    | '/admin'
+    | '/admin/places/new'
   id:
     | '__root__'
     | '/'
@@ -119,14 +183,20 @@ export interface FileRouteTypes {
     | '/auth'
     | '/favorites'
     | '/search'
+    | '/admin/categories'
+    | '/admin/locations'
+    | '/admin/places'
+    | '/admin/products'
     | '/categories/$slug'
     | '/places/$id'
+    | '/admin/'
+    | '/admin/places/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AddPlaceRoute: typeof AddPlaceRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRoute
   FavoritesRoute: typeof FavoritesRoute
   SearchRoute: typeof SearchRoute
@@ -178,6 +248,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/places/$id': {
       id: '/places/$id'
       path: '/places/$id'
@@ -192,13 +269,78 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoriesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/products': {
+      id: '/admin/products'
+      path: '/products'
+      fullPath: '/admin/products'
+      preLoaderRoute: typeof AdminProductsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/places': {
+      id: '/admin/places'
+      path: '/places'
+      fullPath: '/admin/places'
+      preLoaderRoute: typeof AdminPlacesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/locations': {
+      id: '/admin/locations'
+      path: '/locations'
+      fullPath: '/admin/locations'
+      preLoaderRoute: typeof AdminLocationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/categories': {
+      id: '/admin/categories'
+      path: '/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AdminCategoriesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/places/new': {
+      id: '/admin/places/new'
+      path: '/new'
+      fullPath: '/admin/places/new'
+      preLoaderRoute: typeof AdminPlacesNewRouteImport
+      parentRoute: typeof AdminPlacesRoute
+    }
   }
 }
+
+interface AdminPlacesRouteChildren {
+  AdminPlacesNewRoute: typeof AdminPlacesNewRoute
+}
+
+const AdminPlacesRouteChildren: AdminPlacesRouteChildren = {
+  AdminPlacesNewRoute: AdminPlacesNewRoute,
+}
+
+const AdminPlacesRouteWithChildren = AdminPlacesRoute._addFileChildren(
+  AdminPlacesRouteChildren,
+)
+
+interface AdminRouteChildren {
+  AdminCategoriesRoute: typeof AdminCategoriesRoute
+  AdminLocationsRoute: typeof AdminLocationsRoute
+  AdminPlacesRoute: typeof AdminPlacesRouteWithChildren
+  AdminProductsRoute: typeof AdminProductsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminCategoriesRoute: AdminCategoriesRoute,
+  AdminLocationsRoute: AdminLocationsRoute,
+  AdminPlacesRoute: AdminPlacesRouteWithChildren,
+  AdminProductsRoute: AdminProductsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AddPlaceRoute: AddPlaceRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRoute,
   FavoritesRoute: FavoritesRoute,
   SearchRoute: SearchRoute,
@@ -208,3 +350,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
