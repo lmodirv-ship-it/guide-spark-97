@@ -3,7 +3,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const InputSchema = z.object({
-  kind: z.enum(["places", "cities", "countries", "categories", "products"]),
+  kind: z.enum(["places", "cities", "countries", "categories", "products", "ads", "users", "reviews"]),
   query: z.string().min(1).max(300),
   context: z.string().max(500).optional(),
 });
@@ -11,9 +11,12 @@ const InputSchema = z.object({
 const FIELD_HINTS: Record<string, string> = {
   places: "name, category, country, city, address, phone, email, website, description, latitude, longitude",
   cities: "name_ar, name_fr, name_en, country (الاسم بالعربية), latitude, longitude",
-  countries: "code (ISO2), name_ar, name_fr, name_en, flag_emoji, currency, phone_code",
+  countries: "code (ISO2), name_ar, name_fr, name_en, flag_emoji, currency, phone_code, languages",
   categories: "name_ar, name_fr, name_en, icon (lucide-react icon name), color (hex), description",
   products: "name, category_name, price, currency, description, image_keywords",
+  ads: "title (عنوان جذاب قصير), target_url (رابط الإعلان), image_url (رابط صورة بانر), status (active)",
+  users: "full_name, phone (بصيغة دولية), preferred_language (ar/fr/en), avatar_url",
+  reviews: "rating (1-5), comment (تعليق عربي طبيعي), status (approved)",
 };
 
 export const runAutoSearch = createServerFn({ method: "POST" })
