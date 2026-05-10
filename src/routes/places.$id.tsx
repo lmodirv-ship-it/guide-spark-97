@@ -198,6 +198,8 @@ function PlacePage() {
               </div>
             )}
           </section>
+
+          <InlineCheckout placeId={id} />
         </div>
       </main>
       <SiteFooter />
