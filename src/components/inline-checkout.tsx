@@ -230,7 +230,7 @@ export function InlineCheckout({ placeId }: { placeId: string }) {
       )}
 
       {/* Tracking panel (inline) */}
-      {step === "tracking" && (
+      {showTracking && (
         <div className="border-t p-5 md:p-6 bg-muted/30 animate-in fade-in slide-in-from-top-2">
           <div className="flex items-center gap-2 mb-1">
             <Truck className="h-5 w-5 text-primary" />
