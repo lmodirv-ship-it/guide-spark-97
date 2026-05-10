@@ -2,17 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { supabase } from "@/integrations/supabase/client";
-
-type Post = {
-  id: string;
-  title: string;
-  excerpt: string | null;
-  content: string | null;
-  cover_image: string | null;
-  created_at: string;
-  status: string;
-};
+import {
+  fetchHnArticle,
+  hnArticleExternalUrl,
+  hnImageUrl,
+  type HnArticle,
+} from "@/lib/hn-blog";
+import { ExternalLink } from "lucide-react";
 
 export const Route = createFileRoute("/blog/$id")({
   component: PostPage,
@@ -20,16 +16,17 @@ export const Route = createFileRoute("/blog/$id")({
 
 function PostPage() {
   const { id } = Route.useParams();
-  const [post, setPost] = useState<Post | null>(null);
+  const [post, setPost] = useState<HnArticle | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    (async () => {
-      const { data } = await supabase.from("posts").select("*").eq("id", id).maybeSingle();
-      setPost(data as Post | null);
-      setLoading(false);
-    })();
+    setLoading(true);
+    fetchHnArticle(id)
+      .then((p) => setPost(p))
+      .finally(() => setLoading(false));
   }, [id]);
+
+  const cover = hnImageUrl(post?.featured_image ?? null);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -46,27 +43,46 @@ function PostPage() {
           </div>
         ) : (
           <article>
-            <div className="text-xs text-muted-foreground">
-              {new Date(post.created_at).toLocaleDateString("ar")}
+            <div className="text-xs text-muted-foreground flex items-center gap-2">
+              {post.published_at && (
+                <span>{new Date(post.published_at).toLocaleDateString("ar")}</span>
+              )}
+              {post.reading_time ? <span>· {post.reading_time} دقائق</span> : null}
+              {post.language ? <span>· {post.language.toUpperCase()}</span> : null}
             </div>
-            <h1 className="mt-2 text-3xl md:text-4xl font-extrabold text-foreground">{post.title}</h1>
-            {post.excerpt && <p className="mt-3 text-lg text-muted-foreground">{post.excerpt}</p>}
-            {post.cover_image && (
+            <h1 className="mt-2 text-3xl md:text-4xl font-extrabold text-foreground">
+              {post.title}
+            </h1>
+            {post.short_description && (
+              <p className="mt-3 text-lg text-muted-foreground">{post.short_description}</p>
+            )}
+            {cover && (
               <img
-                src={post.cover_image}
+                src={cover}
                 alt={post.title}
                 className="mt-6 w-full rounded-2xl object-cover max-h-[480px]"
               />
             )}
             {post.content && (
-              <div className="mt-8 whitespace-pre-wrap leading-relaxed text-foreground/90">
-                {post.content}
-              </div>
+              <div
+                className="mt-8 prose prose-neutral dark:prose-invert max-w-none leading-relaxed text-foreground/90"
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
             )}
-            <div className="mt-10">
+
+            <div className="mt-10 flex flex-wrap items-center justify-between gap-3">
               <Link to="/feed" className="text-primary underline">
                 ← العودة لقائمة المقالات
               </Link>
+              <a
+                href={hnArticleExternalUrl(post.id)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition"
+              >
+                <ExternalLink className="h-4 w-4" />
+                المصدر: hnChat
+              </a>
             </div>
           </article>
         )}
