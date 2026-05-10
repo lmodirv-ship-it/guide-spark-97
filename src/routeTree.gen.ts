@@ -105,9 +105,9 @@ const CategoriesSlugRoute = CategoriesSlugRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogIdRoute = BlogIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => BlogRoute,
+  id: '/blog/$id',
+  path: '/blog/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
@@ -381,6 +381,7 @@ export interface RootRouteChildren {
   FavoritesRoute: typeof FavoritesRoute
   FeedRoute: typeof FeedRoute
   SearchRoute: typeof SearchRoute
+  BlogIdRoute: typeof BlogIdRoute
   CategoriesSlugRoute: typeof CategoriesSlugRoute
   IdPublicIdRoute: typeof IdPublicIdRoute
   PlacesIdRoute: typeof PlacesIdRoute
@@ -481,10 +482,10 @@ declare module '@tanstack/react-router' {
     }
     '/blog/$id': {
       id: '/blog/$id'
-      path: '/$id'
+      path: '/blog/$id'
       fullPath: '/blog/$id'
       preLoaderRoute: typeof BlogIdRouteImport
-      parentRoute: typeof BlogRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/users': {
       id: '/admin/users'
@@ -654,6 +655,7 @@ const rootRouteChildren: RootRouteChildren = {
   FavoritesRoute: FavoritesRoute,
   FeedRoute: FeedRoute,
   SearchRoute: SearchRoute,
+  BlogIdRoute: BlogIdRoute,
   CategoriesSlugRoute: CategoriesSlugRoute,
   IdPublicIdRoute: IdPublicIdRoute,
   PlacesIdRoute: PlacesIdRoute,
@@ -661,13 +663,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
