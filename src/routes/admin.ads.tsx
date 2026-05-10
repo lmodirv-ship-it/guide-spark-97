@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Plus, Trash2, Megaphone, CreditCard } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { IdCell } from "@/components/admin/id-cell";
 
 export const Route = createFileRoute("/admin/ads")({ component: AdsPage });
 
