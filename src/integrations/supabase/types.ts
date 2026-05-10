@@ -533,6 +533,7 @@ export type Database = {
           owner_id: string | null
           phone: string | null
           price_level: number | null
+          public_id: string | null
           rating_avg: number | null
           rating_count: number
           search_vector: unknown
@@ -564,6 +565,7 @@ export type Database = {
           owner_id?: string | null
           phone?: string | null
           price_level?: number | null
+          public_id?: string | null
           rating_avg?: number | null
           rating_count?: number
           search_vector?: unknown
@@ -595,6 +597,7 @@ export type Database = {
           owner_id?: string | null
           phone?: string | null
           price_level?: number | null
+          public_id?: string | null
           rating_avg?: number | null
           rating_count?: number
           search_vector?: unknown
@@ -642,6 +645,7 @@ export type Database = {
           name: string
           place_id: string
           price: number | null
+          public_id: string | null
           sort_order: number
           updated_at: string
         }
@@ -656,6 +660,7 @@ export type Database = {
           name: string
           place_id: string
           price?: number | null
+          public_id?: string | null
           sort_order?: number
           updated_at?: string
         }
@@ -670,6 +675,7 @@ export type Database = {
           name?: string
           place_id?: string
           price?: number | null
+          public_id?: string | null
           sort_order?: number
           updated_at?: string
         }
@@ -691,6 +697,7 @@ export type Database = {
           id: string
           phone: string | null
           preferred_language: string | null
+          public_id: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -699,6 +706,7 @@ export type Database = {
           id: string
           phone?: string | null
           preferred_language?: string | null
+          public_id?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -707,6 +715,7 @@ export type Database = {
           id?: string
           phone?: string | null
           preferred_language?: string | null
+          public_id?: string | null
         }
         Relationships: []
       }
@@ -812,6 +821,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_unique_public_id: { Args: { _table: unknown }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
