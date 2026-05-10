@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { MapPin, Heart, Bell, Plus, Globe, ChevronDown, LogOut, User } from "lucide-react";
+import { Heart, Bell, Plus, Globe, ChevronDown, LogOut, User } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator,
@@ -40,9 +41,7 @@ export function SiteHeader() {
       <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4">
         {/* Brand */}
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-soft">
-            <MapPin className="h-5 w-5" />
-          </div>
+          <BrandLogo className="h-11 w-11" />
           <div className="hidden sm:block leading-tight">
             <div className="text-lg font-extrabold text-foreground">{t("brand")}</div>
             <div className="text-[10px] text-muted-foreground">{t("tagline")}</div>

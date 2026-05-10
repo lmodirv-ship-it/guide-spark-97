@@ -1,9 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import {
   LayoutDashboard, Store, PlusCircle, Globe2, FolderTree, Package,
-  Inbox, Search, Star, Users, Megaphone, BarChart3, History, Settings, MapPin, Bot,
+  Inbox, Search, Star, Users, Megaphone, BarChart3, History, Settings, Bot,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BrandLogo } from "@/components/brand-logo";
 
 const items = [
   { to: "/admin", label: "لوحة التحكم", icon: LayoutDashboard, exact: true },
@@ -27,8 +28,8 @@ export function AdminSidebar() {
     <aside className="hidden lg:flex w-72 shrink-0 flex-col bg-sidebar text-sidebar-foreground">
       {/* Brand */}
       <div className="flex items-center gap-3 px-6 py-5 border-b border-sidebar-border">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sidebar-primary text-sidebar-primary-foreground">
-          <MapPin className="h-5 w-5" />
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sidebar-accent p-1">
+          <BrandLogo forceLang="ar" className="h-10 w-10" />
         </div>
         <div className="leading-tight">
           <div className="text-xl font-extrabold">دليلك</div>
