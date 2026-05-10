@@ -19,6 +19,7 @@ const items = [
   { to: "/admin/users", label: "المستخدمون", icon: Users },
   { to: "/admin/ads", label: "الإعلانات", icon: Megaphone },
   { to: "/admin/reports", label: "التقارير والإحصائيات", icon: BarChart3 },
+  { to: "/admin/ids", label: "المعرّفات (IDs)", icon: Hash },
   { to: "/admin/activity", label: "سجل النشاطات", icon: History },
   { to: "/admin/settings", label: "الإعدادات", icon: Settings },
 ];
