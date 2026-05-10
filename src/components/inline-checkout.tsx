@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ShoppingCart, Trash2, Minus, Plus, CheckCircle2, UserPlus, Truck, ExternalLink } from "lucide-react";
+import { ShoppingCart, Trash2, Minus, Plus, CheckCircle2, UserPlus, Truck, Package, ChefHat, Bike, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,9 +7,14 @@ import { useCart, cart, cartCount, cartTotal } from "@/lib/cart-store";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-const TRACKING_URL = "https://www.hn-driver.com/delivery/tracking";
-
 type Step = "cart" | "register" | "tracking";
+
+const TRACKING_STEPS = [
+  { key: "pending", label: "تم استلام الطلب", icon: CheckCircle2 },
+  { key: "preparing", label: "قيد التحضير", icon: ChefHat },
+  { key: "on_the_way", label: "في الطريق إليك", icon: Bike },
+  { key: "delivered", label: "تم التوصيل", icon: Home },
+];
 
 export function InlineCheckout({ placeId }: { placeId: string }) {
   const items = useCart();
@@ -22,6 +27,17 @@ export function InlineCheckout({ placeId }: { placeId: string }) {
   const [authed, setAuthed] = useState<boolean>(false);
   const [form, setForm] = useState({ full_name: "", email: "", phone: "", password: "", address: "" });
   const [busy, setBusy] = useState(false);
+  const [trackIdx, setTrackIdx] = useState(0);
+  const [orderId, setOrderId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (step !== "tracking") return;
+    setTrackIdx(0);
+    const t1 = setTimeout(() => setTrackIdx(1), 1500);
+    const t2 = setTimeout(() => setTrackIdx(2), 5000);
+    const t3 = setTimeout(() => setTrackIdx(3), 12000);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [step]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setAuthed(!!data.user));
@@ -32,7 +48,7 @@ export function InlineCheckout({ placeId }: { placeId: string }) {
   if (placeItems.length === 0 && step !== "tracking") return null;
 
   const saveOrder = async (userId: string | null, info: { name: string; phone: string; email?: string; address?: string }) => {
-    const { error } = await supabase.from("orders").insert({
+    const { data, error } = await supabase.from("orders").insert({
       user_id: userId,
       place_id: placeId,
       guest_name: info.name,
@@ -43,8 +59,9 @@ export function InlineCheckout({ placeId }: { placeId: string }) {
       total,
       currency,
       status: "pending",
-    });
+    }).select("id").single();
     if (error) throw error;
+    setOrderId(data?.id ?? null);
   };
 
   const onConfirm = async () => {
@@ -201,22 +218,46 @@ export function InlineCheckout({ placeId }: { placeId: string }) {
       {/* Tracking panel (inline) */}
       {step === "tracking" && (
         <div className="border-t p-5 md:p-6 bg-muted/30 animate-in fade-in slide-in-from-top-2">
-          <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center gap-2 mb-1">
             <Truck className="h-5 w-5 text-primary" />
             <h3 className="text-lg font-bold">تتبع الطلب</h3>
           </div>
-          <p className="text-sm text-muted-foreground mb-3">تم تأكيد طلبك. تابع حالة التوصيل أدناه:</p>
-          <div className="rounded-xl overflow-hidden border bg-background">
-            <iframe
-              src={TRACKING_URL}
-              title="تتبع الطلب"
-              className="w-full h-[480px]"
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-            />
+          <p className="text-sm text-muted-foreground mb-5">
+            تم تأكيد طلبك بنجاح{orderId ? ` — رقم الطلب #${orderId.slice(0, 8).toUpperCase()}` : ""}.
+          </p>
+          <div className="relative rounded-xl border bg-background p-5">
+            <div className="absolute top-10 start-8 end-8 h-1 bg-muted rounded-full">
+              <div
+                className="h-full bg-primary rounded-full transition-all duration-700"
+                style={{ width: `${(trackIdx / (TRACKING_STEPS.length - 1)) * 100}%` }}
+              />
+            </div>
+            <div className="relative grid grid-cols-4 gap-2">
+              {TRACKING_STEPS.map((s, i) => {
+                const Icon = s.icon;
+                const done = i <= trackIdx;
+                const active = i === trackIdx;
+                return (
+                  <div key={s.key} className="flex flex-col items-center text-center">
+                    <div
+                      className={`h-10 w-10 rounded-full flex items-center justify-center border-2 transition-all ${
+                        done ? "bg-primary border-primary text-primary-foreground" : "bg-background border-muted-foreground/30 text-muted-foreground"
+                      } ${active ? "scale-110 shadow-elegant ring-4 ring-primary/20" : ""}`}
+                    >
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <span className={`mt-2 text-[11px] sm:text-xs font-medium ${done ? "text-foreground" : "text-muted-foreground"}`}>
+                      {s.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <Package className="h-4 w-4" />
+              <span>الوقت المتوقع للتوصيل: 25-40 دقيقة</span>
+            </div>
           </div>
-          <a href={TRACKING_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary text-sm mt-3 hover:underline">
-            فتح في نافذة جديدة <ExternalLink className="h-3 w-3" />
-          </a>
         </div>
       )}
     </section>
