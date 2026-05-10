@@ -77,6 +77,12 @@ function AuthPage() {
             )}
             <Input type="email" placeholder={t("auth.emailPlaceholder")} value={email} onChange={(e) => setEmail(e.target.value)} required />
             <Input type="password" placeholder={t("auth.passwordPlaceholder")} value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+            {mode === "login" && (
+              <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer select-none">
+                <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="h-4 w-4 accent-primary" />
+                <span>تذكرني (حفظ البريد وكلمة السر)</span>
+              </label>
+            )}
             <Button type="submit" disabled={loading} className="w-full bg-primary hover:bg-primary/90">
               {mode === "login" ? t("auth.loginBtn") : t("auth.signupBtn")}
             </Button>
