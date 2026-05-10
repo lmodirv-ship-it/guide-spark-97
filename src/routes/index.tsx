@@ -88,10 +88,31 @@ function Home() {
               <MapIcon className="h-5 w-5 text-primary" />
               {t("nearby.title")}
             </h2>
-            <Button variant="ghost" size="sm">{t("nearby.viewAll")}</Button>
+            <Button asChild variant="ghost" size="sm"><Link to="/delivery">{t("nearby.viewAll")}</Link></Button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {places.map((p) => <PlaceCard key={p.id} p={p} />)}
+            {places.map((p, i) => (
+              <Link key={`${p.name}-${i}`} to="/delivery" className="group block bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-elegant transition-all border border-border/40">
+                <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                  <img src={p.image} alt={p.name} loading="lazy" className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <span className="absolute top-3 start-3 h-9 w-9 rounded-full bg-card/95 backdrop-blur flex items-center justify-center shadow-soft">
+                    <Heart className="h-4 w-4 text-destructive" />
+                  </span>
+                  <Badge className="absolute top-3 end-3 bg-card/95 text-foreground hover:bg-card/95 backdrop-blur">
+                    <span className={`h-1.5 w-1.5 rounded-full me-1.5 ${p.open ? "bg-success" : "bg-destructive"}`} />
+                    {p.category}
+                  </Badge>
+                </div>
+                <div className="p-4 space-y-2">
+                  <h3 className="font-bold text-base text-foreground line-clamp-1">{p.name}</h3>
+                  {p.description && <p className="text-xs text-muted-foreground line-clamp-2">{p.description}</p>}
+                  <div className="flex items-center justify-between pt-2 border-t border-border/50 text-xs">
+                    <span className="flex items-center gap-1 font-semibold"><Star className="h-3.5 w-3.5 fill-warning text-warning" />{p.rating.toFixed(1)}</span>
+                    <span className="text-muted-foreground">{p.time} · {p.fee}</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
 
