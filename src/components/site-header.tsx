@@ -53,7 +53,7 @@ export function SiteHeader() {
               <div className="text-[10px] text-muted-foreground">{t("tagline")}</div>
             </div>
           </Link>
-          <Link to="/blog">
+          <Link to="/feed">
             <Button variant="outline" size="sm" className="ms-2">مدونة</Button>
           </Link>
         </div>
