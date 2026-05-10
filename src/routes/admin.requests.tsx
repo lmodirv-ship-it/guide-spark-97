@@ -45,6 +45,7 @@ function Requests() {
         <table className="w-full text-sm">
           <thead className="bg-muted/40 text-xs text-muted-foreground">
             <tr>
+              <th className="p-3 text-start">ID</th>
               <th className="p-3 text-start">الصورة</th>
               <th className="p-3 text-start">الاسم</th>
               <th className="p-3 text-start">التصنيف</th>
@@ -56,9 +57,10 @@ function Requests() {
             </tr>
           </thead>
           <tbody>
-            {rows.length === 0 && <tr><td colSpan={8} className="p-12 text-center text-muted-foreground">لا توجد طلبات</td></tr>}
+            {rows.length === 0 && <tr><td colSpan={9} className="p-12 text-center text-muted-foreground">لا توجد طلبات</td></tr>}
             {rows.map((r) => (
               <tr key={r.id} className="border-t hover:bg-muted/30">
+                <td className="p-3"><IdCell publicId={r.public_id} /></td>
                 <td className="p-3">{r.cover_image ? <img src={r.cover_image} className="h-10 w-14 rounded-md object-cover" /> : <div className="h-10 w-14 rounded-md bg-muted" />}</td>
                 <td className="p-3 font-medium">{r.name}</td>
                 <td className="p-3 text-muted-foreground">{r.categories?.name_ar ?? "—"}</td>
@@ -70,7 +72,7 @@ function Requests() {
                   <div className="flex items-center gap-1">
                     <Button size="icon" variant="ghost" className="h-8 w-8 text-success" onClick={() => setStatus(r.id, "active")}><Check className="h-4 w-4" /></Button>
                     <Button size="icon" variant="ghost" className="h-8 w-8 text-destructive" onClick={() => setStatus(r.id, "rejected")}><X className="h-4 w-4" /></Button>
-                    <Button size="icon" variant="ghost" className="h-8 w-8"><Eye className="h-4 w-4" /></Button>
+                    <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => r.public_id && window.open(`/id/${r.public_id}`, "_blank")}><Eye className="h-4 w-4" /></Button>
                   </div>
                 </td>
               </tr>
