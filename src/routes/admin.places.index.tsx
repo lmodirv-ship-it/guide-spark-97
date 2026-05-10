@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { AutoSearchPanel } from "@/components/admin/auto-search-panel";
+import { IdCell, ValidateButton } from "@/components/admin/id-cell";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/places/")({ component: PlacesAdmin });
