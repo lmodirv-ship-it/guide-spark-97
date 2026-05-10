@@ -12,7 +12,7 @@ import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { HN_RESTAURANTS } from "@/lib/hn-restaurants";
-import heroImg from "@/assets/hero.jpg";
+import heroImg from "@/assets/hero.webp";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -55,7 +55,7 @@ function Home() {
       {/* Hero */}
       <section className="relative">
         <div className="relative h-[460px] md:h-[520px] overflow-hidden">
-          <img src={heroImg} alt="" className="absolute inset-0 h-full w-full object-cover" width={1920} height={1080} />
+          <img src={heroImg} alt="" className="absolute inset-0 h-full w-full object-cover" width={1600} height={900} fetchPriority="high" loading="eager" decoding="async" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/60" />
           <div className="relative container mx-auto px-4 h-full flex flex-col items-center justify-center text-center text-white">
             <h1 className="text-3xl md:text-5xl font-extrabold drop-shadow-lg">

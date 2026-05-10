@@ -22,7 +22,7 @@ export function CategoryGrid({ categories, title, more }: { categories: Category
         {items.map((c) => {
           const Icon = (Icons[(c.icon || "Store") as keyof typeof Icons] as LucideIcon) || Icons.Store;
           const isFood = FOOD_RE.test(`${c.slug} ${c.name}`);
-          const cls = "bg-card border border-border/40 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 shadow-card hover:shadow-elegant hover:-translate-y-1 transition-all";
+          const cls = "min-h-[7rem] bg-card border border-border/40 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 shadow-card hover:shadow-elegant hover:-translate-y-1 transition-all";
           const inner = (
             <>
               <div
@@ -37,18 +37,19 @@ export function CategoryGrid({ categories, title, more }: { categories: Category
           );
           if (isFood) {
             return (
-              <Link key={c.id} to="/delivery" className={cls}>{inner}</Link>
+              <Link key={c.id} to="/delivery" className={cls} aria-label={c.name}>{inner}</Link>
             );
           }
           return (
-            <Link key={c.id} to="/categories/$slug" params={{ slug: c.slug }} className={cls}>
+            <Link key={c.id} to="/categories/$slug" params={{ slug: c.slug }} className={cls} aria-label={c.name}>
               {inner}
             </Link>
           );
         })}
         <Link
           to="/search"
-          className="bg-card border border-border/40 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 shadow-card hover:shadow-elegant transition"
+          aria-label={hasMore ? more : title}
+          className="min-h-[7rem] bg-card border border-border/40 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 shadow-card hover:shadow-elegant transition"
         >
           <div className="h-11 w-11 rounded-xl bg-muted flex items-center justify-center">
             <div className="flex gap-0.5">

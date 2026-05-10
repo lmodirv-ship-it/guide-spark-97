@@ -1,23 +1,21 @@
-import { useTranslation } from "react-i18next";
-import logoAr from "@/assets/logo-ar.png";
-import logoEn from "@/assets/logo-en.png";
+import logoAr from "@/assets/logo-ar.webp";
 
 export function BrandLogo({
   className = "h-10 w-10",
-  forceLang,
 }: {
   className?: string;
   forceLang?: "ar" | "en" | "fr";
 }) {
-  const { i18n } = useTranslation();
-  const lang = forceLang ?? i18n.language;
-  const src = lang === "ar" ? logoAr : logoEn;
+  // Use single logo for SSR/client consistency to avoid hydration mismatch.
   return (
     <img
-      src={src}
+      src={logoAr}
       alt="Dalilik — دليلك"
+      width={88}
+      height={88}
       className={`${className} object-contain select-none`}
       draggable={false}
+      fetchPriority="high"
     />
   );
 }

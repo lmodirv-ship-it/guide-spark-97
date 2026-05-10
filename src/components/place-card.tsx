@@ -36,7 +36,15 @@ export function PlaceCard({ p }: { p: PlaceCardData }) {
     <>
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
         {p.cover_image ? (
-          <img src={p.cover_image} alt={p.name} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+          <img
+            src={p.cover_image.includes("unsplash.com") && !p.cover_image.includes("fm=") ? `${p.cover_image}${p.cover_image.includes("?") ? "&" : "?"}fm=webp&q=70` : p.cover_image}
+            alt={p.name}
+            width={600}
+            height={450}
+            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+            decoding="async"
+          />
         ) : (
           <div className="h-full w-full bg-gradient-to-br from-muted to-accent" />
         )}

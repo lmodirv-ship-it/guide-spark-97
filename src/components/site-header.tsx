@@ -48,13 +48,13 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center gap-2 group">
             <BrandLogo className="h-11 w-11" />
-            <div className="hidden sm:block leading-tight">
+            <div className="hidden sm:block leading-tight" suppressHydrationWarning>
               <div className="text-lg font-extrabold text-foreground">{t("brand")}</div>
               <div className="text-[10px] text-muted-foreground">{t("tagline")}</div>
             </div>
           </Link>
-          <Link to="/feed">
-            <Button variant="outline" size="sm" className="ms-2">مدونة</Button>
+          <Link to="/feed" aria-label="المدونة">
+            <Button variant="outline" size="sm" className="ms-2 min-h-11 px-4">مدونة</Button>
           </Link>
         </div>
 
@@ -77,9 +77,9 @@ export function SiteHeader() {
           {/* Language */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="gap-1">
+              <Button variant="ghost" size="sm" className="gap-1" aria-label="تغيير اللغة">
                 <Globe className="h-4 w-4" />
-                <span className="hidden sm:inline text-xs uppercase">{i18n.language}</span>
+                <span className="hidden sm:inline text-xs uppercase" suppressHydrationWarning>{i18n.language}</span>
                 <ChevronDown className="h-3 w-3 opacity-60" />
               </Button>
             </DropdownMenuTrigger>
@@ -92,11 +92,11 @@ export function SiteHeader() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button variant="ghost" size="icon" className="hidden sm:inline-flex">
+          <Button variant="ghost" size="icon" className="hidden sm:inline-flex" aria-label="الإشعارات">
             <Bell className="h-5 w-5" />
           </Button>
-          <Link to="/favorites">
-            <Button variant="ghost" size="icon" className="hidden sm:inline-flex">
+          <Link to="/favorites" aria-label="المفضلة">
+            <Button variant="ghost" size="icon" className="hidden sm:inline-flex" aria-label="المفضلة">
               <Heart className="h-5 w-5" />
             </Button>
           </Link>
@@ -106,7 +106,7 @@ export function SiteHeader() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full bg-muted">
+                <Button variant="ghost" size="icon" className="rounded-full bg-muted" aria-label="حسابي">
                   <User className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -124,7 +124,7 @@ export function SiteHeader() {
           )}
 
           {/* CTA */}
-          <Link to="/add-place">
+          <Link to="/add-place" aria-label={t("nav.addPlace")}>
             <Button className="bg-primary hover:bg-primary/90 text-primary-foreground gap-1 shadow-soft">
               <Plus className="h-4 w-4" />
               <span className="hidden sm:inline">{t("nav.addPlace")}</span>
