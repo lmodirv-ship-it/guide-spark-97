@@ -47,10 +47,7 @@ function DeliveryPage() {
           <div>
             <h1 className="text-2xl md:text-3xl font-extrabold">المطاعم والمتاجر</h1>
             <p className="text-sm text-muted-foreground mt-1">
-              قائمة محدّثة من{" "}
-              <a href={SOURCE} target="_blank" rel="noreferrer" className="text-primary hover:underline inline-flex items-center gap-1">
-                hn-driver.com <ExternalLink className="h-3 w-3" />
-              </a>
+              قائمة محدّثة من المطاعم والمتاجر المتاحة للتوصيل
             </p>
           </div>
           <div className="relative w-full sm:w-72">
