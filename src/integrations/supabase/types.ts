@@ -14,12 +14,90 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_logs: {
+        Row: {
+          action: string
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          new_data: Json | null
+          old_data: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      ads: {
+        Row: {
+          created_at: string
+          ends_at: string | null
+          id: string
+          image_url: string | null
+          place_id: string | null
+          starts_at: string | null
+          status: string
+          target_url: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          place_id?: string | null
+          starts_at?: string | null
+          status?: string
+          target_url?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          place_id?: string | null
+          starts_at?: string | null
+          status?: string
+          target_url?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ads_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       categories: {
         Row: {
           color: string | null
           created_at: string
           icon: string | null
           id: string
+          is_active: boolean
           name_ar: string
           name_en: string
           name_fr: string
@@ -32,6 +110,7 @@ export type Database = {
           created_at?: string
           icon?: string | null
           id?: string
+          is_active?: boolean
           name_ar: string
           name_en: string
           name_fr: string
@@ -44,6 +123,7 @@ export type Database = {
           created_at?: string
           icon?: string | null
           id?: string
+          is_active?: boolean
           name_ar?: string
           name_en?: string
           name_fr?: string
@@ -66,6 +146,7 @@ export type Database = {
           country_id: string
           created_at: string
           id: string
+          is_active: boolean
           latitude: number | null
           longitude: number | null
           name_ar: string
@@ -77,6 +158,7 @@ export type Database = {
           country_id: string
           created_at?: string
           id?: string
+          is_active?: boolean
           latitude?: number | null
           longitude?: number | null
           name_ar: string
@@ -88,6 +170,7 @@ export type Database = {
           country_id?: string
           created_at?: string
           id?: string
+          is_active?: boolean
           latitude?: number | null
           longitude?: number | null
           name_ar?: string
@@ -109,31 +192,40 @@ export type Database = {
         Row: {
           code: string
           created_at: string
+          currency: string | null
           flag_emoji: string | null
           id: string
+          is_active: boolean
           name_ar: string
           name_en: string
           name_fr: string
+          phone_code: string | null
           slug: string
         }
         Insert: {
           code: string
           created_at?: string
+          currency?: string | null
           flag_emoji?: string | null
           id?: string
+          is_active?: boolean
           name_ar: string
           name_en: string
           name_fr: string
+          phone_code?: string | null
           slug: string
         }
         Update: {
           code?: string
           created_at?: string
+          currency?: string | null
           flag_emoji?: string | null
           id?: string
+          is_active?: boolean
           name_ar?: string
           name_en?: string
           name_fr?: string
+          phone_code?: string | null
           slug?: string
         }
         Relationships: []
@@ -170,61 +262,249 @@ export type Database = {
       import_jobs: {
         Row: {
           category: string | null
+          category_id: string | null
           city: string | null
+          city_id: string | null
           country: string | null
+          country_id: string | null
           created_at: string
+          created_by: string | null
+          finished_at: string | null
           id: string
           query: string | null
           result_count: number | null
+          source: string | null
           status: string
+          total_duplicates: number
+          total_found: number
+          total_imported: number
         }
         Insert: {
           category?: string | null
+          category_id?: string | null
           city?: string | null
+          city_id?: string | null
           country?: string | null
+          country_id?: string | null
           created_at?: string
+          created_by?: string | null
+          finished_at?: string | null
           id?: string
           query?: string | null
           result_count?: number | null
+          source?: string | null
           status?: string
+          total_duplicates?: number
+          total_found?: number
+          total_imported?: number
         }
         Update: {
           category?: string | null
+          category_id?: string | null
           city?: string | null
+          city_id?: string | null
           country?: string | null
+          country_id?: string | null
           created_at?: string
+          created_by?: string | null
+          finished_at?: string | null
           id?: string
           query?: string | null
           result_count?: number | null
+          source?: string | null
           status?: string
+          total_duplicates?: number
+          total_found?: number
+          total_imported?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "import_jobs_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "import_jobs_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "import_jobs_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      import_results: {
+        Row: {
+          address: string | null
+          created_at: string
+          duplicate_place_id: string | null
+          id: string
+          import_job_id: string
+          latitude: number | null
+          longitude: number | null
+          name: string | null
+          normalized_data: Json | null
+          phone: string | null
+          raw_data: Json | null
+          status: string
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          duplicate_place_id?: string | null
+          id?: string
+          import_job_id: string
+          latitude?: number | null
+          longitude?: number | null
+          name?: string | null
+          normalized_data?: Json | null
+          phone?: string | null
+          raw_data?: Json | null
+          status?: string
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          duplicate_place_id?: string | null
+          id?: string
+          import_job_id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name?: string | null
+          normalized_data?: Json | null
+          phone?: string | null
+          raw_data?: Json | null
+          status?: string
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "import_results_duplicate_place_id_fkey"
+            columns: ["duplicate_place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "import_results_import_job_id_fkey"
+            columns: ["import_job_id"]
+            isOneToOne: false
+            referencedRelation: "import_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      opening_hours: {
+        Row: {
+          close_time: string | null
+          created_at: string
+          day_of_week: number
+          id: string
+          is_closed: boolean
+          open_time: string | null
+          place_id: string
+        }
+        Insert: {
+          close_time?: string | null
+          created_at?: string
+          day_of_week: number
+          id?: string
+          is_closed?: boolean
+          open_time?: string | null
+          place_id: string
+        }
+        Update: {
+          close_time?: string | null
+          created_at?: string
+          day_of_week?: number
+          id?: string
+          is_closed?: boolean
+          open_time?: string | null
+          place_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opening_hours_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       place_images: {
         Row: {
+          alt_text: string | null
           created_at: string
           id: string
           image_url: string
+          is_cover: boolean
           place_id: string
           sort_order: number
         }
         Insert: {
+          alt_text?: string | null
           created_at?: string
           id?: string
           image_url: string
+          is_cover?: boolean
           place_id: string
           sort_order?: number
         }
         Update: {
+          alt_text?: string | null
           created_at?: string
           id?: string
           image_url?: string
+          is_cover?: boolean
           place_id?: string
           sort_order?: number
         }
         Relationships: [
           {
             foreignKeyName: "place_images_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      place_owners: {
+        Row: {
+          created_at: string
+          id: string
+          place_id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          place_id: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          place_id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "place_owners_place_id_fkey"
             columns: ["place_id"]
             isOneToOne: false
             referencedRelation: "places"
@@ -240,22 +520,29 @@ export type Database = {
           country_id: string
           cover_image: string | null
           created_at: string
+          created_by: string | null
           description: string | null
           email: string | null
           id: string
           is_featured: boolean
           is_open: boolean
+          is_verified: boolean
           latitude: number | null
           longitude: number | null
           name: string
           owner_id: string | null
           phone: string | null
+          price_level: number | null
           rating_avg: number | null
           rating_count: number
+          search_vector: unknown
           slug: string
+          source: string | null
+          source_url: string | null
           status: Database["public"]["Enums"]["place_status"]
           updated_at: string
           website: string | null
+          whatsapp: string | null
         }
         Insert: {
           address?: string | null
@@ -264,22 +551,29 @@ export type Database = {
           country_id: string
           cover_image?: string | null
           created_at?: string
+          created_by?: string | null
           description?: string | null
           email?: string | null
           id?: string
           is_featured?: boolean
           is_open?: boolean
+          is_verified?: boolean
           latitude?: number | null
           longitude?: number | null
           name: string
           owner_id?: string | null
           phone?: string | null
+          price_level?: number | null
           rating_avg?: number | null
           rating_count?: number
+          search_vector?: unknown
           slug: string
+          source?: string | null
+          source_url?: string | null
           status?: Database["public"]["Enums"]["place_status"]
           updated_at?: string
           website?: string | null
+          whatsapp?: string | null
         }
         Update: {
           address?: string | null
@@ -288,22 +582,29 @@ export type Database = {
           country_id?: string
           cover_image?: string | null
           created_at?: string
+          created_by?: string | null
           description?: string | null
           email?: string | null
           id?: string
           is_featured?: boolean
           is_open?: boolean
+          is_verified?: boolean
           latitude?: number | null
           longitude?: number | null
           name?: string
           owner_id?: string | null
           phone?: string | null
+          price_level?: number | null
           rating_avg?: number | null
           rating_count?: number
+          search_vector?: unknown
           slug?: string
+          source?: string | null
+          source_url?: string | null
           status?: Database["public"]["Enums"]["place_status"]
           updated_at?: string
           website?: string | null
+          whatsapp?: string | null
         }
         Relationships: [
           {
@@ -331,6 +632,7 @@ export type Database = {
       }
       products: {
         Row: {
+          category_name: string | null
           created_at: string
           currency: string | null
           description: string | null
@@ -340,8 +642,11 @@ export type Database = {
           name: string
           place_id: string
           price: number | null
+          sort_order: number
+          updated_at: string
         }
         Insert: {
+          category_name?: string | null
           created_at?: string
           currency?: string | null
           description?: string | null
@@ -351,8 +656,11 @@ export type Database = {
           name: string
           place_id: string
           price?: number | null
+          sort_order?: number
+          updated_at?: string
         }
         Update: {
+          category_name?: string | null
           created_at?: string
           currency?: string | null
           description?: string | null
@@ -362,6 +670,8 @@ export type Database = {
           name?: string
           place_id?: string
           price?: number | null
+          sort_order?: number
+          updated_at?: string
         }
         Relationships: [
           {
@@ -407,6 +717,7 @@ export type Database = {
           id: string
           place_id: string
           rating: number
+          status: string
           user_id: string
         }
         Insert: {
@@ -415,6 +726,7 @@ export type Database = {
           id?: string
           place_id: string
           rating: number
+          status?: string
           user_id: string
         }
         Update: {
@@ -423,11 +735,50 @@ export type Database = {
           id?: string
           place_id?: string
           rating?: number
+          status?: string
           user_id?: string
         }
         Relationships: [
           {
             foreignKeyName: "reviews_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          place_id: string
+          plan: string
+          started_at: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          place_id: string
+          plan: string
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          place_id?: string
+          plan?: string
+          started_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_place_id_fkey"
             columns: ["place_id"]
             isOneToOne: false
             referencedRelation: "places"
@@ -473,7 +824,15 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "owner" | "user"
-      place_status: "pending" | "active" | "suspended" | "rejected"
+      place_status:
+        | "pending"
+        | "active"
+        | "suspended"
+        | "rejected"
+        | "draft"
+        | "pending_review"
+        | "published"
+        | "archived"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -602,7 +961,16 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "owner", "user"],
-      place_status: ["pending", "active", "suspended", "rejected"],
+      place_status: [
+        "pending",
+        "active",
+        "suspended",
+        "rejected",
+        "draft",
+        "pending_review",
+        "published",
+        "archived",
+      ],
     },
   },
 } as const
