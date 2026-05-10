@@ -145,46 +145,49 @@ function PlacePage() {
                 {groups.map(([cat, items]) => (
                   <div key={cat}>
                     <h3 className="text-lg font-bold mb-3 pb-2 border-b">{cat}</h3>
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid gap-3 md:grid-cols-2">
                       {items.map((p) => (
-                        <div key={p.id} className="group rounded-2xl border bg-card overflow-hidden shadow-card hover:shadow-elegant transition flex flex-col">
-                          <div className="aspect-[4/3] bg-muted overflow-hidden relative">
+                        <div key={p.id} className="group rounded-2xl border bg-card overflow-hidden shadow-card hover:shadow-elegant transition flex flex-row-reverse items-stretch">
+                          {/* Image on the right (RTL) */}
+                          <div className="w-28 sm:w-36 shrink-0 bg-muted overflow-hidden relative">
                             {p.image ? (
                               <img src={p.image} alt={p.name} className="h-full w-full object-cover group-hover:scale-105 transition" />
                             ) : (
-                              <div className="h-full w-full flex items-center justify-center text-muted-foreground text-xs">لا توجد صورة</div>
+                              <div className="h-full w-full flex items-center justify-center text-muted-foreground text-[10px]">لا توجد صورة</div>
                             )}
                             {!p.is_available && (
-                              <Badge variant="secondary" className="absolute top-2 start-2 bg-destructive/90 text-destructive-foreground">غير متوفر</Badge>
+                              <Badge variant="secondary" className="absolute top-1 start-1 bg-destructive/90 text-destructive-foreground text-[10px]">غير متوفر</Badge>
                             )}
                           </div>
-                          <div className="p-4 flex-1 flex flex-col">
-                            <div className="font-bold">{p.name}</div>
+                          {/* Middle: name, description, price */}
+                          <div className="flex-1 p-3 sm:p-4 min-w-0 flex flex-col justify-center">
+                            <div className="font-bold truncate">{p.name}</div>
                             {p.description && <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{p.description}</p>}
-                            <div className="mt-auto pt-3 flex items-center justify-between gap-2">
-                              <div className="text-lg font-extrabold tabular-nums text-primary">
-                                {p.price ? (
-                                  <>
-                                    {p.price} {p.currency || "MAD"}
-                                    {isHotel && <span className="text-xs font-normal text-muted-foreground"> / ليلة</span>}
-                                  </>
-                                ) : "—"}
-                              </div>
-                              {isHotel ? (
-                                <ReservationDialog
-                                  placeId={id}
-                                  placeName={place.name}
-                                  productId={p.id}
-                                  nightlyPrice={p.price}
-                                  currency={p.currency}
-                                  trigger={<Button size="sm" disabled={!p.is_available} className="gap-1"><CalendarCheck className="h-4 w-4" /> احجز</Button>}
-                                />
-                              ) : (
-                                <Button size="sm" disabled={!p.is_available || !p.price} onClick={() => addItem(p)} className="gap-1">
-                                  <Plus className="h-4 w-4" /> أضف
-                                </Button>
-                              )}
+                            <div className="mt-2 text-base sm:text-lg font-extrabold tabular-nums text-primary">
+                              {p.price ? (
+                                <>
+                                  {p.price} {p.currency || "MAD"}
+                                  {isHotel && <span className="text-xs font-normal text-muted-foreground"> / ليلة</span>}
+                                </>
+                              ) : "—"}
                             </div>
+                          </div>
+                          {/* Action on the far left */}
+                          <div className="flex items-center justify-center p-3 border-s bg-muted/30">
+                            {isHotel ? (
+                              <ReservationDialog
+                                placeId={id}
+                                placeName={place.name}
+                                productId={p.id}
+                                nightlyPrice={p.price}
+                                currency={p.currency}
+                                trigger={<Button size="sm" disabled={!p.is_available} className="gap-1"><CalendarCheck className="h-4 w-4" /> احجز</Button>}
+                              />
+                            ) : (
+                              <Button size="sm" disabled={!p.is_available || !p.price} onClick={() => addItem(p)} className="gap-1">
+                                <Plus className="h-4 w-4" /> أضف
+                              </Button>
+                            )}
                           </div>
                         </div>
                       ))}
