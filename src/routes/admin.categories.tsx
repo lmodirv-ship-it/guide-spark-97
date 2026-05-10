@@ -56,7 +56,7 @@ function Categories() {
 
         <table className="w-full text-sm">
           <thead className="bg-muted/40 text-xs text-muted-foreground">
-            <tr><th className="p-3 text-start">اللون</th><th className="p-3 text-start">الاسم</th><th className="p-3 text-start">FR / EN</th><th className="p-3 text-start">الأب</th><th className="p-3 text-start">الترتيب</th><th className="p-3 text-start"></th></tr>
+            <tr><th className="p-3 text-start">ID</th><th className="p-3 text-start">اللون</th><th className="p-3 text-start">الاسم</th><th className="p-3 text-start">FR / EN</th><th className="p-3 text-start">الأب</th><th className="p-3 text-start">الترتيب</th><th className="p-3 text-start"></th></tr>
           </thead>
           <tbody>
             {parents.map((p) => (
