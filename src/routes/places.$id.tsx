@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { Star, Phone, MapPin, Globe, Mail, Plus, ShoppingBag, BedDouble, CalendarCheck } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -9,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { cart } from "@/lib/cart-store";
 import { toast } from "sonner";
 import { ReservationDialog } from "@/components/reservation-dialog";
+import { autoSeedProducts } from "@/lib/auto-seed-products.functions";
 
 export const Route = createFileRoute("/places/$id")({ component: PlacePage });
 
@@ -27,13 +29,29 @@ function PlacePage() {
   const { id } = Route.useParams();
   const [place, setPlace] = useState<any>(null);
   const [products, setProducts] = useState<Product[]>([]);
+  const [seeded, setSeeded] = useState(false);
+  const seedFn = useServerFn(autoSeedProducts);
+
+  const loadProducts = () =>
+    supabase.from("products").select("*").eq("place_id", id).order("sort_order").order("created_at")
+      .then(({ data }) => setProducts((data ?? []) as any));
 
   useEffect(() => {
     supabase.from("places").select("*, category:categories(name_ar, name_en, slug, color), city:cities(name_ar)").eq("id", id).single()
       .then(({ data }) => setPlace(data));
-    supabase.from("products").select("*").eq("place_id", id).order("sort_order").order("created_at")
-      .then(({ data }) => setProducts((data ?? []) as any));
+    loadProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  // Auto-generate a default menu when the place has no products yet.
+  useEffect(() => {
+    if (!place || products.length > 0 || seeded) return;
+    setSeeded(true);
+    seedFn({ data: { placeId: id } })
+      .then((r: any) => { if (r?.inserted > 0) loadProducts(); })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [place, products.length]);
 
   const groups = useMemo(() => {
     const map = new Map<string, Product[]>();
