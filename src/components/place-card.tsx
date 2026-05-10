@@ -66,12 +66,7 @@ export function PlaceCard({ p }: { p: PlaceCardData }) {
           <span className="font-semibold">{Number(p.rating_avg ?? 0).toFixed(1)}</span>
           <span className="text-muted-foreground text-xs">({p.rating_count})</span>
         </div>
-        <div className="flex items-center justify-between pt-2 border-t border-border/50">
-          {p.phone ? (
-            <a href={`tel:${p.phone}`} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary" onClick={(e) => e.stopPropagation()}>
-              <Phone className="h-3 w-3" /> {p.phone}
-            </a>
-          ) : <span />}
+        <div className="flex items-center justify-end pt-2 border-t border-border/50">
           <span className={`text-xs font-medium ${p.is_open ? "text-success" : "text-destructive"}`}>
             {p.is_open ? t("place.openNow") : t("place.closed")}
           </span>

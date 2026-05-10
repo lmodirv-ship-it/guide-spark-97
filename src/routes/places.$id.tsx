@@ -117,13 +117,11 @@ function PlacePage() {
                     trigger={<Button className="gap-1"><CalendarCheck className="h-4 w-4" /> احجز الآن</Button>}
                   />
                 )}
-                {place.phone && <Button variant={isHotel ? "outline" : "default"} asChild><a href={`tel:${place.phone}`}><Phone className="h-4 w-4 me-2" />اتصل</a></Button>}
               </div>
             </div>
             {place.description && <p className="mt-6 text-foreground/80 leading-relaxed">{place.description}</p>}
             <div className="mt-6 grid sm:grid-cols-2 gap-3 text-sm">
               {place.address && <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" />{place.address}</div>}
-              {place.phone && <div className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" />{place.phone}</div>}
               {place.email && <div className="flex items-center gap-2"><Mail className="h-4 w-4 text-primary" />{place.email}</div>}
               {place.website && <a href={place.website} className="flex items-center gap-2 text-primary"><Globe className="h-4 w-4" />{place.website}</a>}
             </div>
