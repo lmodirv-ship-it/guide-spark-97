@@ -24,12 +24,12 @@ import { Route as AdminReviewsRouteImport } from './routes/admin.reviews'
 import { Route as AdminRequestsRouteImport } from './routes/admin.requests'
 import { Route as AdminReportsRouteImport } from './routes/admin.reports'
 import { Route as AdminProductsRouteImport } from './routes/admin.products'
-import { Route as AdminPlacesRouteImport } from './routes/admin.places'
 import { Route as AdminLocationsRouteImport } from './routes/admin.locations'
 import { Route as AdminImportRouteImport } from './routes/admin.import'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 import { Route as AdminAdsRouteImport } from './routes/admin.ads'
 import { Route as AdminActivityRouteImport } from './routes/admin.activity'
+import { Route as AdminPlacesIndexRouteImport } from './routes/admin.places.index'
 import { Route as AdminPlacesNewRouteImport } from './routes/admin.places.new'
 
 const SearchRoute = SearchRouteImport.update({
@@ -107,11 +107,6 @@ const AdminProductsRoute = AdminProductsRouteImport.update({
   path: '/products',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminPlacesRoute = AdminPlacesRouteImport.update({
-  id: '/places',
-  path: '/places',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminLocationsRoute = AdminLocationsRouteImport.update({
   id: '/locations',
   path: '/locations',
@@ -137,10 +132,15 @@ const AdminActivityRoute = AdminActivityRouteImport.update({
   path: '/activity',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminPlacesIndexRoute = AdminPlacesIndexRouteImport.update({
+  id: '/places/',
+  path: '/places/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPlacesNewRoute = AdminPlacesNewRouteImport.update({
-  id: '/new',
-  path: '/new',
-  getParentRoute: () => AdminPlacesRoute,
+  id: '/places/new',
+  path: '/places/new',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -155,7 +155,6 @@ export interface FileRoutesByFullPath {
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/import': typeof AdminImportRoute
   '/admin/locations': typeof AdminLocationsRoute
-  '/admin/places': typeof AdminPlacesRouteWithChildren
   '/admin/products': typeof AdminProductsRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/requests': typeof AdminRequestsRoute
@@ -166,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/places/$id': typeof PlacesIdRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/places/new': typeof AdminPlacesNewRoute
+  '/admin/places/': typeof AdminPlacesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -178,7 +178,6 @@ export interface FileRoutesByTo {
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/import': typeof AdminImportRoute
   '/admin/locations': typeof AdminLocationsRoute
-  '/admin/places': typeof AdminPlacesRouteWithChildren
   '/admin/products': typeof AdminProductsRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/requests': typeof AdminRequestsRoute
@@ -189,6 +188,7 @@ export interface FileRoutesByTo {
   '/places/$id': typeof PlacesIdRoute
   '/admin': typeof AdminIndexRoute
   '/admin/places/new': typeof AdminPlacesNewRoute
+  '/admin/places': typeof AdminPlacesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -203,7 +203,6 @@ export interface FileRoutesById {
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/import': typeof AdminImportRoute
   '/admin/locations': typeof AdminLocationsRoute
-  '/admin/places': typeof AdminPlacesRouteWithChildren
   '/admin/products': typeof AdminProductsRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/requests': typeof AdminRequestsRoute
@@ -214,6 +213,7 @@ export interface FileRoutesById {
   '/places/$id': typeof PlacesIdRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/places/new': typeof AdminPlacesNewRoute
+  '/admin/places/': typeof AdminPlacesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -229,7 +229,6 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/import'
     | '/admin/locations'
-    | '/admin/places'
     | '/admin/products'
     | '/admin/reports'
     | '/admin/requests'
@@ -240,6 +239,7 @@ export interface FileRouteTypes {
     | '/places/$id'
     | '/admin/'
     | '/admin/places/new'
+    | '/admin/places/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -252,7 +252,6 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/import'
     | '/admin/locations'
-    | '/admin/places'
     | '/admin/products'
     | '/admin/reports'
     | '/admin/requests'
@@ -263,6 +262,7 @@ export interface FileRouteTypes {
     | '/places/$id'
     | '/admin'
     | '/admin/places/new'
+    | '/admin/places'
   id:
     | '__root__'
     | '/'
@@ -276,7 +276,6 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/import'
     | '/admin/locations'
-    | '/admin/places'
     | '/admin/products'
     | '/admin/reports'
     | '/admin/requests'
@@ -287,6 +286,7 @@ export interface FileRouteTypes {
     | '/places/$id'
     | '/admin/'
     | '/admin/places/new'
+    | '/admin/places/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -407,13 +407,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProductsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/places': {
-      id: '/admin/places'
-      path: '/places'
-      fullPath: '/admin/places'
-      preLoaderRoute: typeof AdminPlacesRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/locations': {
       id: '/admin/locations'
       path: '/locations'
@@ -449,27 +442,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminActivityRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/places/': {
+      id: '/admin/places/'
+      path: '/places'
+      fullPath: '/admin/places/'
+      preLoaderRoute: typeof AdminPlacesIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/places/new': {
       id: '/admin/places/new'
-      path: '/new'
+      path: '/places/new'
       fullPath: '/admin/places/new'
       preLoaderRoute: typeof AdminPlacesNewRouteImport
-      parentRoute: typeof AdminPlacesRoute
+      parentRoute: typeof AdminRoute
     }
   }
 }
-
-interface AdminPlacesRouteChildren {
-  AdminPlacesNewRoute: typeof AdminPlacesNewRoute
-}
-
-const AdminPlacesRouteChildren: AdminPlacesRouteChildren = {
-  AdminPlacesNewRoute: AdminPlacesNewRoute,
-}
-
-const AdminPlacesRouteWithChildren = AdminPlacesRoute._addFileChildren(
-  AdminPlacesRouteChildren,
-)
 
 interface AdminRouteChildren {
   AdminActivityRoute: typeof AdminActivityRoute
@@ -477,7 +465,6 @@ interface AdminRouteChildren {
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminImportRoute: typeof AdminImportRoute
   AdminLocationsRoute: typeof AdminLocationsRoute
-  AdminPlacesRoute: typeof AdminPlacesRouteWithChildren
   AdminProductsRoute: typeof AdminProductsRoute
   AdminReportsRoute: typeof AdminReportsRoute
   AdminRequestsRoute: typeof AdminRequestsRoute
@@ -485,6 +472,8 @@ interface AdminRouteChildren {
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminPlacesNewRoute: typeof AdminPlacesNewRoute
+  AdminPlacesIndexRoute: typeof AdminPlacesIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
@@ -493,7 +482,6 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminImportRoute: AdminImportRoute,
   AdminLocationsRoute: AdminLocationsRoute,
-  AdminPlacesRoute: AdminPlacesRouteWithChildren,
   AdminProductsRoute: AdminProductsRoute,
   AdminReportsRoute: AdminReportsRoute,
   AdminRequestsRoute: AdminRequestsRoute,
@@ -501,6 +489,8 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminSettingsRoute: AdminSettingsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminPlacesNewRoute: AdminPlacesNewRoute,
+  AdminPlacesIndexRoute: AdminPlacesIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)

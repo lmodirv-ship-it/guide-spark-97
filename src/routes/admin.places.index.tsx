@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { StatusBadge } from "./admin.index";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/admin/places")({ component: PlacesAdmin });
+export const Route = createFileRoute("/admin/places/")({ component: PlacesAdmin });
 
 function PlacesAdmin() {
   const [rows, setRows] = useState<any[]>([]);
