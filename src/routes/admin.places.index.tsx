@@ -6,6 +6,7 @@ import { AdminTopbar } from "@/components/admin/admin-topbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { StatusBadge } from "@/components/admin/status-badge";
+import { AutoSearchPanel } from "@/components/admin/auto-search-panel";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/places/")({ component: PlacesAdmin });
@@ -47,6 +48,8 @@ function PlacesAdmin() {
   return (
     <>
       <AdminTopbar title="إدارة الأماكن" subtitle={`${rows.length} مكان`} />
+
+      <AutoSearchPanel kind="places" onSaved={load} />
 
       <div className="rounded-2xl border bg-card shadow-card">
         <div className="p-4 border-b flex flex-wrap items-center gap-2">

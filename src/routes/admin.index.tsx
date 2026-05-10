@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminTopbar } from "@/components/admin/admin-topbar";
 import { StatCard } from "@/components/admin/stat-card";
 import { StatusBadge } from "@/components/admin/status-badge";
+import { AutoSearchPanel } from "@/components/admin/auto-search-panel";
 
 export const Route = createFileRoute("/admin/")({ component: AdminDashboard });
 
@@ -62,6 +63,8 @@ function AdminDashboard() {
   return (
     <>
       <AdminTopbar title="لوحة التحكم" subtitle="مرحباً بك في لوحة تحكم دليلك" />
+
+      <AutoSearchPanel kind="places" title="البحث الأوتوماتيكي عن أماكن جديدة" hint="اكتب نوع المكان والمدينة وسيتم اقتراح نتائج جاهزة لمراجعتها وحفظها كمسودة." />
 
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">

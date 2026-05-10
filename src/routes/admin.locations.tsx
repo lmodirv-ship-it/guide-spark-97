@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminTopbar } from "@/components/admin/admin-topbar";
+import { AutoSearchPanel } from "@/components/admin/auto-search-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -19,7 +20,10 @@ function Locations() {
           <TabsTrigger value="countries">الدول</TabsTrigger>
           <TabsTrigger value="cities">المدن</TabsTrigger>
         </TabsList>
-        <TabsContent value="countries"><CountriesTab /></TabsContent>
+        <TabsContent value="countries">
+          <AutoSearchPanel kind="countries" title="بحث/توليد دول أوتوماتيكياً" />
+          <CountriesTab />
+        </TabsContent>
         <TabsContent value="cities"><CitiesTab /></TabsContent>
       </Tabs>
     </>

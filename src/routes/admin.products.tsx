@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminTopbar } from "@/components/admin/admin-topbar";
+import { AutoSearchPanel } from "@/components/admin/auto-search-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Trash2 } from "lucide-react";
@@ -34,6 +35,19 @@ function Products() {
   return (
     <>
       <AdminTopbar title="المنتجات والقوائم" subtitle={`${rows.length} منتج`} />
+      {form.place_id ? (
+        <AutoSearchPanel
+          kind="products"
+          context={form.place_id}
+          title="توليد قائمة منتجات أوتوماتيكياً للمكان المختار"
+          hint="اختر المكان من النموذج أدناه أولاً، ثم اكتب نوع القائمة (مثلاً: قائمة بيتزا)."
+          onSaved={load}
+        />
+      ) : (
+        <div className="rounded-2xl border border-dashed p-3 text-xs text-muted-foreground mb-4">
+          ⚡ اختر مكاناً من النموذج أدناه لتفعيل البحث/التوليد الأوتوماتيكي للمنتجات.
+        </div>
+      )}
       <div className="rounded-2xl border bg-card p-5 shadow-card">
         <div className="grid md:grid-cols-7 gap-2 mb-4">
           <select value={form.place_id} onChange={(e) => setForm({ ...form, place_id: e.target.value })} className="rounded-lg border bg-background px-3 py-2 text-sm">
