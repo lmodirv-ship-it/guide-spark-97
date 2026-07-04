@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import {
   LayoutDashboard, Store, PlusCircle, Globe2, FolderTree, Package,
-  Inbox, Search, Star, Users, Megaphone, BarChart3, History, Settings, Bot, Hash, Newspaper,
+  Inbox, Search, Star, Users, Megaphone, BarChart3, History, Settings, Bot, Hash, Newspaper, ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/brand-logo";
