@@ -10,6 +10,7 @@ import {
 import { setLanguage } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { CartDrawer } from "@/components/cart-drawer";
+import { VisitorCounter } from "@/components/visitor-counter";
 import { autoDetectAndApplyLanguage } from "@/lib/geo-language";
 import type { User as SupaUser } from "@supabase/supabase-js";
 
@@ -56,7 +57,9 @@ export function SiteHeader() {
           <Link to="/feed" aria-label="المدونة">
             <Button variant="outline" size="sm" className="ms-2 min-h-11 px-4">مدونة</Button>
           </Link>
+          <VisitorCounter />
         </div>
+
 
         {/* Nav */}
         <nav className="hidden md:flex items-center gap-1">
