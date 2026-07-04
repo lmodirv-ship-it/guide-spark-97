@@ -17,6 +17,7 @@ const items = [
   { to: "/admin/import", label: "البحث الأوتوماتيكي", icon: Search },
   { to: "/admin/reviews", label: "التقييمات والمراجعات", icon: Star },
   { to: "/admin/users", label: "المستخدمون", icon: Users },
+  { to: "/admin/tasks", label: "المهام والأدوار", icon: ListTodo },
   { to: "/admin/ads", label: "الإعلانات", icon: Megaphone },
   { to: "/admin/reports", label: "التقارير والإحصائيات", icon: BarChart3 },
   { to: "/admin/ids", label: "المعرّفات (IDs)", icon: Hash },
