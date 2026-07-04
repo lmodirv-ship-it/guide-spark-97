@@ -942,6 +942,24 @@ export type Database = {
           },
         ]
       }
+      site_stats: {
+        Row: {
+          count: number
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          count?: number
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          count?: number
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           created_at: string
@@ -1014,6 +1032,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_visitors: { Args: never; Returns: number }
       slugify: { Args: { v: string }; Returns: string }
       unaccent: { Args: { "": string }; Returns: string }
     }
