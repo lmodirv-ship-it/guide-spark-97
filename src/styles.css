@@ -4,8 +4,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Cairo for Arabic, Inter for Latin */
-@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap");
+/* Cairo for Arabic, Inter for Latin — loaded via <link> in __root.tsx */
 
 @theme inline {
   --font-sans: "Cairo", "Inter", system-ui, sans-serif;
