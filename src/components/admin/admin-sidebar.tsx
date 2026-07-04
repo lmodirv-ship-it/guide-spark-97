@@ -22,6 +22,7 @@ const items = [
   { to: "/admin/ids", label: "المعرّفات (IDs)", icon: Hash },
   { to: "/blog-editor", label: "محرر المدونة", icon: Newspaper },
   { to: "/admin/activity", label: "سجل النشاطات", icon: History },
+  { to: "/admin/seo", label: "SEO و Search Console", icon: ShieldCheck },
   { to: "/admin/settings", label: "الإعدادات", icon: Settings },
 ];
 
