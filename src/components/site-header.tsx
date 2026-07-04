@@ -10,6 +10,7 @@ import {
 import { setLanguage } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { CartDrawer } from "@/components/cart-drawer";
+import { VisitorCounter } from "@/components/visitor-counter";
 import { autoDetectAndApplyLanguage } from "@/lib/geo-language";
 import type { User as SupaUser } from "@supabase/supabase-js";
 
