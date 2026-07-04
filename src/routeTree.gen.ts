@@ -25,6 +25,7 @@ import { Route as IdPublicIdRouteImport } from './routes/id.$publicId'
 import { Route as CategoriesSlugRouteImport } from './routes/categories.$slug'
 import { Route as BlogIdRouteImport } from './routes/blog.$id'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminTasksRouteImport } from './routes/admin.tasks'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminSeoRouteImport } from './routes/admin.seo'
 import { Route as AdminReviewsRouteImport } from './routes/admin.reviews'
@@ -119,6 +120,11 @@ const BlogIdRoute = BlogIdRouteImport.update({
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTasksRoute = AdminTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
@@ -221,6 +227,7 @@ export interface FileRoutesByFullPath {
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/seo': typeof AdminSeoRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin/tasks': typeof AdminTasksRoute
   '/admin/users': typeof AdminUsersRoute
   '/blog/$id': typeof BlogIdRoute
   '/categories/$slug': typeof CategoriesSlugRoute
@@ -252,6 +259,7 @@ export interface FileRoutesByTo {
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/seo': typeof AdminSeoRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin/tasks': typeof AdminTasksRoute
   '/admin/users': typeof AdminUsersRoute
   '/blog/$id': typeof BlogIdRoute
   '/categories/$slug': typeof CategoriesSlugRoute
@@ -286,6 +294,7 @@ export interface FileRoutesById {
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/seo': typeof AdminSeoRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin/tasks': typeof AdminTasksRoute
   '/admin/users': typeof AdminUsersRoute
   '/blog/$id': typeof BlogIdRoute
   '/categories/$slug': typeof CategoriesSlugRoute
@@ -321,6 +330,7 @@ export interface FileRouteTypes {
     | '/admin/reviews'
     | '/admin/seo'
     | '/admin/settings'
+    | '/admin/tasks'
     | '/admin/users'
     | '/blog/$id'
     | '/categories/$slug'
@@ -352,6 +362,7 @@ export interface FileRouteTypes {
     | '/admin/reviews'
     | '/admin/seo'
     | '/admin/settings'
+    | '/admin/tasks'
     | '/admin/users'
     | '/blog/$id'
     | '/categories/$slug'
@@ -385,6 +396,7 @@ export interface FileRouteTypes {
     | '/admin/reviews'
     | '/admin/seo'
     | '/admin/settings'
+    | '/admin/tasks'
     | '/admin/users'
     | '/blog/$id'
     | '/categories/$slug'
@@ -526,6 +538,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/tasks': {
+      id: '/admin/tasks'
+      path: '/tasks'
+      fullPath: '/admin/tasks'
+      preLoaderRoute: typeof AdminTasksRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/settings': {
       id: '/admin/settings'
       path: '/settings'
@@ -662,6 +681,7 @@ interface AdminRouteChildren {
   AdminReviewsRoute: typeof AdminReviewsRoute
   AdminSeoRoute: typeof AdminSeoRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminTasksRoute: typeof AdminTasksRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -680,6 +700,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminReviewsRoute: AdminReviewsRoute,
   AdminSeoRoute: AdminSeoRoute,
   AdminSettingsRoute: AdminSettingsRoute,
+  AdminTasksRoute: AdminTasksRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
